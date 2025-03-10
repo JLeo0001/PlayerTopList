@@ -1,0 +1,6 @@
+name: PlayerTopList
+version: '1.0-SNAPSHOT'
+main: cn.JvavRE.playerTopList.PlayerTopList
+api-version: '1.21'
+authors: [ Jvav_Runtime_Environment ]
+description: 同步聊天插件

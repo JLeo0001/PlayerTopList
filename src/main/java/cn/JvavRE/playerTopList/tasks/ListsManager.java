@@ -3,21 +3,22 @@ package cn.JvavRE.playerTopList.tasks;
 import cn.JvavRE.playerTopList.PlayerTopList;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.Bukkit;
+import org.bukkit.Statistic;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
-public class TaskManager {
+public class ListsManager {
     private static PlayerTopList plugin;
     private static ArrayList<TopList> topLists;
     private static ScheduledTask updateTask;
 
-    public TaskManager(PlayerTopList plugin){
-        TaskManager.plugin = plugin;
+    public ListsManager(PlayerTopList plugin) {
+        ListsManager.plugin = plugin;
         topLists = new ArrayList<>();
     }
 
-    public static void startTask(){
+    public static void startTask() {
         updateTask = Bukkit.getAsyncScheduler().runAtFixedRate(
                 plugin,
                 task -> topLists.forEach(TopList::updateTopList),
@@ -27,11 +28,20 @@ public class TaskManager {
         );
     }
 
-    public static void stopTask(){
+    public static void stopTask() {
         updateTask.cancel();
     }
 
-    public static void addNewList(TopList topList){
-        topLists.add(topList);
+    public static void restartTask() {
+        stopTask();
+        startTask();
+    }
+
+    public static void addNewList(String name, Statistic type) {
+        topLists.add(new TopList(name, type));
+    }
+
+    public static TopList getListByName(String name){
+        return topLists.stream().filter(topList -> topList.getName().equals(name)).findFirst().orElse(null);
     }
 }

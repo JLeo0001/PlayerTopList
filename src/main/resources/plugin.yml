@@ -2,5 +2,19 @@ name: PlayerTopList
 version: '1.0-SNAPSHOT'
 main: cn.JvavRE.playerTopList.PlayerTopList
 api-version: '1.21'
-authors: [ Jvav_Runtime_Environment ]
+author: Jvav_Runtime_Environment
 description: 同步聊天插件
+
+commands:
+  playertoplist:
+    aliases: [ptl]
+    description: CrossBank main command
+    usage: /<command> [args]
+
+permissions:
+  playertoplist.admin:
+    default: op
+    description: Allows access to admin commands
+  playertoplist.view:
+    default: true
+    description: Allows access to see the top list

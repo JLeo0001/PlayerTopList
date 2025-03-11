@@ -1,5 +1,7 @@
 package cn.JvavRE.playerTopList.tasks;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Statistic;
@@ -21,14 +23,14 @@ public class TopList {
 
     protected void updateTopList() {
         playerDataList.clear();
-        for (OfflinePlayer player : Bukkit.getOfflinePlayers()){
-            playerDataList.add(PlayerData.fromPlayer(player, type));
+        for (OfflinePlayer player : Bukkit.getOfflinePlayers()) {
+            playerDataList.add(PlayerData.of(player, type));
         }
         sort();
     }
 
-    private void sort(){
-        playerDataList.sort(Comparator.comparingInt(PlayerData::getCount));
+    private void sort() {
+        playerDataList.sort(Comparator.comparingInt(PlayerData::count));
     }
 
     public String getName() {
@@ -37,5 +39,18 @@ public class TopList {
 
     public ArrayList<PlayerData> getPlayerDataList() {
         return playerDataList;
+    }
+
+    public String toMiniMessage() {
+        StringBuilder builder = new StringBuilder();
+        builder.append(name).append(":<newline>");
+        for (int i = 0; i < playerDataList.size(); i++) {
+            builder.append(i + 1).append(". ").append(playerDataList.get(i).toMiniMessage()).append("<newline>");
+        }
+        return builder.toString();
+    }
+
+    public Component toComponent(){
+        return MiniMessage.miniMessage().deserialize(toMiniMessage());
     }
 }

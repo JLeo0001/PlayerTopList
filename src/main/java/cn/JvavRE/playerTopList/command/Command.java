@@ -1,8 +1,8 @@
 package cn.JvavRE.playerTopList.command;
 
 import cn.JvavRE.playerTopList.PlayerTopList;
-import cn.JvavRE.playerTopList.tasks.TopList;
 import cn.JvavRE.playerTopList.tasks.ListsManager;
+import cn.JvavRE.playerTopList.tasks.TopList;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -34,12 +34,12 @@ public class Command implements CommandExecutor {
     }
 
     private void onShow(CommandSender sender, String[] args) {
-        if (!sender.hasPermission("playertoplist.view")){
+        if (!sender.hasPermission("playertoplist.view")) {
             sender.sendMessage("你没有权限");
             return;
         }
 
-        if (!(args.length > 1)){
+        if (!(args.length > 1)) {
             sender.sendMessage("用法错误");
             return;
         }

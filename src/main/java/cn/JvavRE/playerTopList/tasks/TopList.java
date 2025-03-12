@@ -1,5 +1,7 @@
 package cn.JvavRE.playerTopList.tasks;
 
+import cn.JvavRE.playerTopList.config.UIComponent;
+import cn.JvavRE.playerTopList.config.UIConfig;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
@@ -30,7 +32,7 @@ public class TopList {
     }
 
     private void sort() {
-        playerDataList.sort(Comparator.comparingInt(PlayerData::count));
+        playerDataList.sort(Comparator.comparingInt(PlayerData::count).reversed());
     }
 
     public String getName() {
@@ -41,16 +43,39 @@ public class TopList {
         return playerDataList;
     }
 
-    public String toMiniMessage() {
+    public String toMiniMessage(int page) {
         StringBuilder builder = new StringBuilder();
-        builder.append(name).append(":<newline>");
-        for (int i = 0; i < playerDataList.size(); i++) {
-            builder.append(i + 1).append(". ").append(playerDataList.get(i).toMiniMessage()).append("<newline>");
+
+        int pageSize = 10;
+        int start = (page - 1) * pageSize;
+        int end = Math.min(start + pageSize, playerDataList.size());
+
+        // 拼接UI头部
+        builder.append(UIConfig.get(UIComponent.HEADER)
+                .replace("listName", name)
+        ).append("<newline>");
+
+        // 添加玩家数据
+        for (int i = start; i < end; i++) {
+            builder.append(playerDataList.get(i).toMiniMessage()
+                    .replace("{num}", String.valueOf(i + 1))
+            ).append("<newline>");
         }
+
+        // 添加UI尾部
+        builder.append(UIConfig.get(UIComponent.FOOTER)
+                .replace("{prevButton}", UIConfig.get(UIComponent.PREV_BUTTON))
+                .replace("{nxtButton}", UIConfig.get(UIComponent.NEXT_BUTTON))
+                .replace("{idx}", UIConfig.get(UIComponent.INDEX)
+                        .replace("{currentIndex}", String.valueOf(page))
+                        .replace("{totalIndex}", String.valueOf((playerDataList.size() / pageSize) + 1))
+                )
+        );
+
         return builder.toString();
     }
 
-    public Component toComponent(){
-        return MiniMessage.miniMessage().deserialize(toMiniMessage());
+    public Component toComponent(int page) {
+        return MiniMessage.miniMessage().deserialize(toMiniMessage(page));
     }
 }

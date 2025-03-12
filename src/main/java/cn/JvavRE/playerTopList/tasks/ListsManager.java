@@ -41,7 +41,7 @@ public class ListsManager {
         topLists.add(new TopList(name, type));
     }
 
-    public static TopList getListByName(String name){
+    public static TopList getListByName(String name) {
         return topLists.stream().filter(topList -> topList.getName().equals(name)).findFirst().orElse(null);
     }
 }

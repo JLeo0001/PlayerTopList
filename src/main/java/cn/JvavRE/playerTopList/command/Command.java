@@ -3,6 +3,7 @@ package cn.JvavRE.playerTopList.command;
 import cn.JvavRE.playerTopList.PlayerTopList;
 import cn.JvavRE.playerTopList.tasks.ListsManager;
 import cn.JvavRE.playerTopList.tasks.TopList;
+import cn.JvavRE.playerTopList.utils.Digit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -45,7 +46,14 @@ public class Command implements CommandExecutor {
         }
 
         String name = args[1];
+        String pageStr = args.length > 2 ? args[2] : "1";
 
+        if(!Digit.isDigit(pageStr)){
+            sender.sendMessage("用法错误");
+            return;
+        }
+
+        int page = Integer.parseInt(pageStr);
         TopList topList = ListsManager.getListByName(name);
 
         if (topList == null) {
@@ -53,6 +61,6 @@ public class Command implements CommandExecutor {
             return;
         }
 
-        sender.sendMessage(topList.toComponent());
+        sender.sendMessage(topList.toComponent(page));
     }
 }

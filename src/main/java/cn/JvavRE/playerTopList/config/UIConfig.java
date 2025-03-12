@@ -11,7 +11,7 @@ public class UIConfig {
         return components.get(component);
     }
 
-    protected void loadConfig(ConfigurationSection config) {
+    public static void loadConfig(ConfigurationSection config) {
         ConcurrentHashMap<UIComponent, String> newMap = new ConcurrentHashMap<>();
 
         if (config == null) {

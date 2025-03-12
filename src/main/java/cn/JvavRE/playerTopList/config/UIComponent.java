@@ -1,13 +1,12 @@
 package cn.JvavRE.playerTopList.config;
 
 public enum UIComponent {
-    HEADER("header", "<aqua>================[{listName}]================</aqua>"),
-    FOOTER("footer", "<aqua>{prevButton} ( {idx} ) {nxtButton}</aqua>"),
-    PREV_BUTTON("previous-button", "<gray> < </gray>"),
-    NEXT_BUTTON("next-button", "<gray> > </gray>"),
-    INDEX("index", "当前: <white>{currentIndex}</white>/<white>{totalIndex}</white>"),
-    ITEM("item", "<white>{num}. <green>{playerName}{spacer}{count}</green></white>"),
-    SPACER("spacer", " "),
+    HEADER("header", "<aqua>================[ {listName} ]================</aqua>"),
+    FOOTER("footer", "<aqua>{prevButton}当前: (<white>{currentIndex}</white>/<white>{totalIndex}</white>){nextButton}</aqua>"),
+    PREV_BUTTON("previous-button", "<click:run_command:'/ptl show {listName} {prevIndex}'><hover:show_text:'上一页'><dark_aqua> <- </dark_aqua></hover></click>"),
+    NEXT_BUTTON("next-button", "<click:run_command:'/ptl show {listName} {nextIndex}'><hover:show_text:'下一页'><dark_aqua> -> </dark_aqua></hover></click>"),
+    ITEM("item", "<gray>⬡</gray> <white>{num}. <green>{playerName} <grey>{spacer}</grey> {count}</green></white>"),
+    SPACER("spacer", "-"),
     ;
 
 

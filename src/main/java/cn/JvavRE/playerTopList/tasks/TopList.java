@@ -46,13 +46,14 @@ public class TopList {
     public String toMiniMessage(int page) {
         StringBuilder builder = new StringBuilder();
 
-        int pageSize = 10;
+        int pageSize = 1;
         int start = (page - 1) * pageSize;
         int end = Math.min(start + pageSize, playerDataList.size());
+        int totalPage = (playerDataList.size() + pageSize - 1) / pageSize;
 
         // 拼接UI头部
         builder.append(UIConfig.get(UIComponent.HEADER)
-                .replace("listName", name)
+                .replace("{listName}", name)
         ).append("<newline>");
 
         // 添加玩家数据
@@ -64,12 +65,14 @@ public class TopList {
 
         // 添加UI尾部
         builder.append(UIConfig.get(UIComponent.FOOTER)
-                .replace("{prevButton}", UIConfig.get(UIComponent.PREV_BUTTON))
-                .replace("{nxtButton}", UIConfig.get(UIComponent.NEXT_BUTTON))
-                .replace("{idx}", UIConfig.get(UIComponent.INDEX)
-                        .replace("{currentIndex}", String.valueOf(page))
-                        .replace("{totalIndex}", String.valueOf((playerDataList.size() / pageSize) + 1))
-                )
+                .replace("{prevButton}", page > 1 ? UIConfig.get(UIComponent.PREV_BUTTON) : "")
+                .replace("{nextButton}", page < totalPage ? UIConfig.get(UIComponent.NEXT_BUTTON) : "")
+                .replace("{currentIndex}", String.valueOf(page))
+                .replace("{totalIndex}", String.valueOf(totalPage))
+                // 按钮内容格式化
+                .replace("{listName}", name)
+                .replace("{prevIndex}", String.valueOf(page - 1))
+                .replace("{nextIndex}", String.valueOf(page + 1))
         );
 
         return builder.toString();

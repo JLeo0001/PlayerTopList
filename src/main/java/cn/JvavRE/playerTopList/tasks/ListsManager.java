@@ -13,7 +13,7 @@ public class ListsManager {
     private static ArrayList<TopList> topLists;
     private static ScheduledTask updateTask;
 
-    public ListsManager(PlayerTopList plugin) {
+    public static void init(PlayerTopList plugin) {
         ListsManager.plugin = plugin;
         topLists = new ArrayList<>();
     }

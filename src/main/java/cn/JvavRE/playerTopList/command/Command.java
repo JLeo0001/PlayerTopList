@@ -48,7 +48,7 @@ public class Command implements CommandExecutor {
         String name = args[1];
         String pageStr = args.length > 2 ? args[2] : "1";
 
-        if(!Digit.isDigit(pageStr)){
+        if (!Digit.isDigit(pageStr)) {
             sender.sendMessage("用法错误");
             return;
         }

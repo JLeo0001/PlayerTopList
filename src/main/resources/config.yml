@@ -1,0 +1,17 @@
+page-size: 10
+update-interval: 60
+
+ui:
+  header: "<aqua>================[ {listName} ]================</aqua>"
+  footer: "<aqua>{prevButton}当前: (<white>{currentIndex}</white>/<white>{totalIndex}</white>){nextButton}</aqua>"
+  prevButton: "<click:run_command:'/ptl show {listName} {prevIndex}'><hover:show_text:'上一页'><dark_aqua> <- </dark_aqua></hover></click>"
+  nextButton: "<click:run_command:'/ptl show {listName} {nextIndex}'><hover:show_text:'下一页'><dark_aqua> -> </dark_aqua></hover></click>"
+  item: "<gray>⬡</gray> <white>{num}. <green>{playerName} <grey>{spacer}</grey> {count}</green></white>"
+  spacer: "-"
+
+lists:
+  time:
+    type: PLAY_ONE_MINUTE
+
+  block:
+    type: MINE_BLOCK

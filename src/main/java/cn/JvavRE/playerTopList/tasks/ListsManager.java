@@ -1,6 +1,7 @@
 package cn.JvavRE.playerTopList.tasks;
 
 import cn.JvavRE.playerTopList.PlayerTopList;
+import cn.JvavRE.playerTopList.config.Config;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.Bukkit;
 import org.bukkit.Statistic;
@@ -23,7 +24,7 @@ public class ListsManager {
                 plugin,
                 task -> topLists.forEach(TopList::updateTopList),
                 1,
-                60,
+                Config.getUpdateInterval(),
                 TimeUnit.SECONDS
         );
     }
@@ -43,5 +44,9 @@ public class ListsManager {
 
     public static TopList getListByName(String name) {
         return topLists.stream().filter(topList -> topList.getName().equals(name)).findFirst().orElse(null);
+    }
+
+    public static TopList getListByType(Statistic type) {
+        return topLists.stream().filter(topList -> topList.getType().equals(type)).findFirst().orElse(null);
     }
 }

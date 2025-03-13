@@ -1,5 +1,6 @@
 package cn.JvavRE.playerTopList.tasks;
 
+import cn.JvavRE.playerTopList.config.Config;
 import cn.JvavRE.playerTopList.config.UIComponent;
 import cn.JvavRE.playerTopList.config.UIConfig;
 import net.kyori.adventure.text.Component;
@@ -35,18 +36,11 @@ public class TopList {
         playerDataList.sort(Comparator.comparingInt(PlayerData::count).reversed());
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public ArrayList<PlayerData> getPlayerDataList() {
-        return playerDataList;
-    }
-
     public String toMiniMessage(int page) {
         StringBuilder builder = new StringBuilder();
 
-        int pageSize = 1;
+        // 分页计算
+        int pageSize = Config.getPageSize();
         int start = (page - 1) * pageSize;
         int end = Math.min(start + pageSize, playerDataList.size());
         int totalPage = (playerDataList.size() + pageSize - 1) / pageSize;
@@ -80,5 +74,17 @@ public class TopList {
 
     public Component toComponent(int page) {
         return MiniMessage.miniMessage().deserialize(toMiniMessage(page));
+    }
+
+    public ArrayList<PlayerData> getPlayerDataList() {
+        return playerDataList;
+    }
+
+    public Statistic getType() {
+        return type;
+    }
+
+    public String getName() {
+        return name;
     }
 }

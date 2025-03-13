@@ -6,20 +6,24 @@ import cn.JvavRE.playerTopList.config.UIConfig;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Statistic;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 public class TopList {
     private final String name;
     private final Statistic type;
+    private final List<Material> materials;
     private final ArrayList<PlayerData> playerDataList;
 
-    public TopList(String name, Statistic type) {
+    public TopList(String name, Statistic type, List<Material> materials) {
         this.name = name;
         this.type = type;
+        this.materials = materials;
         this.playerDataList = new ArrayList<>();
         updateTopList();
     }
@@ -27,7 +31,7 @@ public class TopList {
     protected void updateTopList() {
         playerDataList.clear();
         for (OfflinePlayer player : Bukkit.getOfflinePlayers()) {
-            playerDataList.add(PlayerData.of(player, type));
+            playerDataList.add(PlayerData.of(player, type, materials));
         }
         sort();
     }

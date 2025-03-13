@@ -16,7 +16,6 @@ public final class PlayerTopList extends JavaPlugin {
         ListsManager.init(this);
         Config.init(this);
 
-        ListsManager.addNewList("time", org.bukkit.Statistic.PLAY_ONE_MINUTE);
         ListsManager.startTask();
     }
 

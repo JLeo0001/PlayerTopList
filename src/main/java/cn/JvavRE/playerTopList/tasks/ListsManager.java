@@ -4,9 +4,11 @@ import cn.JvavRE.playerTopList.PlayerTopList;
 import cn.JvavRE.playerTopList.config.Config;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.Statistic;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class ListsManager {
@@ -38,8 +40,8 @@ public class ListsManager {
         startTask();
     }
 
-    public static void addNewList(String name, Statistic type) {
-        topLists.add(new TopList(name, type));
+    public static void addNewList(String name, Statistic type, List<Material> materials) {
+        topLists.add(new TopList(name, type, materials));
     }
 
     public static TopList getListByName(String name) {

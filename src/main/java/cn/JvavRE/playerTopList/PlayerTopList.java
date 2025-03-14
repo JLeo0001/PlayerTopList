@@ -5,14 +5,22 @@ import cn.JvavRE.playerTopList.config.Config;
 import cn.JvavRE.playerTopList.tasks.ListsManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.logging.Logger;
+
 public final class PlayerTopList extends JavaPlugin {
+    private static Logger logger;
+
+    public static Logger Logger() {
+        return logger;
+    }
 
     @Override
     public void onEnable() {
         // Plugin startup logic
 
-        new Command(this);
+        logger = getLogger();
 
+        new Command(this);
         ListsManager.init(this);
         Config.init(this);
 

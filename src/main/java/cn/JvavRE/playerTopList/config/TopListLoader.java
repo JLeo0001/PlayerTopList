@@ -1,7 +1,7 @@
 package cn.JvavRE.playerTopList.config;
 
 import cn.JvavRE.playerTopList.PlayerTopList;
-import cn.JvavRE.playerTopList.tasks.ListsManager;
+import cn.JvavRE.playerTopList.tasks.ListsMgr;
 import org.bukkit.Material;
 import org.bukkit.Statistic;
 import org.bukkit.configuration.ConfigurationSection;
@@ -35,10 +35,9 @@ public class TopListLoader {
             return;
         }
 
+        // 材料类型加载
         List<Material> materials = new ArrayList<>();
-        List<EntityType> entities = new ArrayList<>();
-
-        if (!materialNames.isEmpty() && materialNames.getFirst().equals("ALL")) {
+        if (!materialNames.isEmpty() && materialNames.getFirst().equalsIgnoreCase("all")) {
             for (Material material : Material.values()) {
                 if (material.isSolid()) materials.add(material);
             }
@@ -54,7 +53,9 @@ public class TopListLoader {
             }
         }
 
-        if (!entityNames.isEmpty() && entityNames.getFirst().equals("ALL")) {
+        // 实体类型加载
+        List<EntityType> entities = new ArrayList<>();
+        if (!entityNames.isEmpty() && entityNames.getFirst().equalsIgnoreCase("all")) {
             for (EntityType entityType : EntityType.values()) {
                 if (entityType.isAlive()) entities.add(entityType);
             }
@@ -70,13 +71,16 @@ public class TopListLoader {
             }
         }
 
+        // 根据type类型设置对应子项目
         Statistic statistic = Statistic.valueOf(type);
         if (statistic.isBlock()) {
-            ListsManager.addNewList(name, Statistic.valueOf(type), materials);
+            ListsMgr.addNewList(name, Statistic.valueOf(type), materials);
         } else {
-            ListsManager.addNewList(name, Statistic.valueOf(type), entities);
+            ListsMgr.addNewList(name, Statistic.valueOf(type), entities);
         }
 
+//        PlayerTopList.Logger().info("材料列表: " + materials);
+//        PlayerTopList.Logger().info("实体列表: " + entities);
 
         PlayerTopList.Logger().info("成功添加列表: " + name + " (" + type + ")");
     }

@@ -2,7 +2,7 @@ package cn.JvavRE.playerTopList;
 
 import cn.JvavRE.playerTopList.command.Command;
 import cn.JvavRE.playerTopList.config.Config;
-import cn.JvavRE.playerTopList.tasks.ListsManager;
+import cn.JvavRE.playerTopList.tasks.ListsMgr;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.logging.Logger;
@@ -21,10 +21,10 @@ public final class PlayerTopList extends JavaPlugin {
         logger = getLogger();
 
         new Command(this);
-        ListsManager.init(this);
+        ListsMgr.init(this);
         Config.init(this);
 
-        ListsManager.startTask();
+        ListsMgr.startTask();
     }
 
     @Override

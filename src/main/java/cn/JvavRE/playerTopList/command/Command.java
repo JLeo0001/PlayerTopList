@@ -1,7 +1,7 @@
 package cn.JvavRE.playerTopList.command;
 
 import cn.JvavRE.playerTopList.PlayerTopList;
-import cn.JvavRE.playerTopList.tasks.ListsManager;
+import cn.JvavRE.playerTopList.tasks.ListsMgr;
 import cn.JvavRE.playerTopList.tasks.TopList;
 import cn.JvavRE.playerTopList.utils.Digit;
 import org.bukkit.command.CommandExecutor;
@@ -54,7 +54,7 @@ public class Command implements CommandExecutor {
         }
 
         int page = Integer.parseInt(pageStr);
-        TopList topList = ListsManager.getListByName(name);
+        TopList topList = ListsMgr.getListByName(name);
 
         if (topList == null) {
             sender.sendMessage("未找到列表");

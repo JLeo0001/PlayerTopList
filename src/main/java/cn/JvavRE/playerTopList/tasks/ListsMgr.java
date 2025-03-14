@@ -10,13 +10,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class ListsManager {
+public class ListsMgr {
     private static PlayerTopList plugin;
     private static ArrayList<TopList> topLists;
     private static ScheduledTask updateTask;
 
     public static void init(PlayerTopList plugin) {
-        ListsManager.plugin = plugin;
+        ListsMgr.plugin = plugin;
         topLists = new ArrayList<>();
     }
 

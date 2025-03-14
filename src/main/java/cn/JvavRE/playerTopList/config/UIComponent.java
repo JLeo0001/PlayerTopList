@@ -1,5 +1,8 @@
 package cn.JvavRE.playerTopList.config;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+
 public enum UIComponent {
     HEADER("header", "<aqua>================[ {listName} ]================</aqua>"),
     FOOTER("footer", "<aqua>{prevButton}当前: (<white>{currentIndex}</white>/<white>{totalIndex}</white>){nextButton}</aqua>"),
@@ -7,18 +10,19 @@ public enum UIComponent {
     NEXT_BUTTON("next-button", "<click:run_command:'/ptl show {listName} {nextIndex}'><hover:show_text:'下一页'><dark_aqua> -> </dark_aqua></hover></click>"),
     ITEM("item", "<gray>⬡</gray> <white>{num}. <green>{playerName} <grey>{spacer}</grey> {count}</green></white>"),
     SPACER("spacer", "-"),
+    MAIN_UI("you-should-not-use-this", "this-will-generate-on-default"),
     ;
 
 
     private final String name;
-    private final String component;
+    private final Component component;
 
     UIComponent(String name, String component) {
         this.name = name;
-        this.component = component;
+        this.component = MiniMessage.miniMessage().deserialize(component);
     }
 
-    public String getComponent() {
+    public Component getComponent() {
         return component;
     }
 

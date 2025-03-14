@@ -1,4 +1,62 @@
 package cn.JvavRE.playerTopList.ui;
 
+import cn.JvavRE.playerTopList.config.UIComponent;
+import cn.JvavRE.playerTopList.config.UIConfig;
+import cn.JvavRE.playerTopList.tasks.PlayerData;
+import cn.JvavRE.playerTopList.tasks.TopList;
+import net.kyori.adventure.text.Component;
+import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class UI {
+    private final PageMgr pageMgr = new PageMgr();
+    private final List<Component> tempList = new ArrayList<>();
+    private final TopList topList;
+
+    public UI(TopList topList) {
+        this.topList = topList;
+        update();
+    }
+
+    public void update() {
+        tempList.clear();
+        for (int i = 0; i < topList.getPlayerDataList().size(); i++) {
+            PlayerData playerData = topList.getPlayerDataList().get(i);
+            String playerName = playerData.player().getName() != null ? playerData.player().getName() : "null";
+
+            int num = i + 1;
+            tempList.add(UIConfig.get(UIComponent.ITEM)
+                    .replaceText(config -> config.matchLiteral("{num}").replacement(String.valueOf(num)))
+                    .replaceText(config -> config.matchLiteral("{playerName}").replacement(playerName))
+                    .replaceText(config -> config.matchLiteral("{spacer}").replacement(UIConfig.get(UIComponent.SPACER)))
+                    .replaceText(config -> config.matchLiteral("{count}").replacement(String.valueOf(playerData.count())))
+            );
+        }
+
+        pageMgr.updatePages(tempList);
+    }
+
+    public void show(Player player, int page) {
+        player.sendMessage(UIConfig.get(UIComponent.MAIN_UI)
+                .replaceText(config -> config.matchLiteral("{items}").replacement(pageMgr.getPage(page)))
+                .replaceText(config -> config.matchLiteral("{listName}").replacement(topList.getName()))
+                .replaceText(config -> config.matchLiteral("{totalIndex}").replacement(String.valueOf(pageMgr.getTotalPages())))
+                .replaceText(config -> config.matchLiteral("{currentIndex}").replacement(String.valueOf(page)))
+                .replaceText(config -> config.matchLiteral("{prevButton}").replacement(
+                        page <= 1 ? Component.empty()
+                                : UIConfig.get(UIComponent.SPACER)
+                                .replaceText(subConfig -> subConfig.matchLiteral("{prevIndex}").replacement(String.valueOf(page - 1)))
+                                .replaceText(subConfig -> subConfig.matchLiteral("{listName}").replacement(topList.getName()))
+
+                ))
+                .replaceText(config -> config.matchLiteral("{nextButton}").replacement(
+                        page >= pageMgr.getTotalPages() ? Component.empty()
+                                : UIConfig.get(UIComponent.SPACER)
+                                .replaceText(subConfig -> subConfig.matchLiteral("{nextIndex}").replacement(String.valueOf(page + 1)))
+                                .replaceText(subConfig -> subConfig.matchLiteral("{listName}").replacement(topList.getName()))
+                ))
+        );
+    }
 }

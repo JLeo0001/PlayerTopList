@@ -46,7 +46,7 @@ public class TopListLoader {
             for (String materialName : materialNames) {
                 Material material = Material.matchMaterial(materialName);
                 if (material == null) {
-                    PlayerTopList.Logger().warning("不是有效的材料: '" + materialName + "'");
+                    PlayerTopList.Logger().warning(name + " -> 不是有效的材料: '" + materialName + "'");
                     continue;
                 }
                 materials.add(material);
@@ -66,7 +66,7 @@ public class TopListLoader {
                     EntityType entityType = EntityType.valueOf(entityName);
                     entities.add(entityType);
                 } catch (Exception e) {
-                    PlayerTopList.Logger().warning("不是有效的实体: '" + entityName + "'");
+                    PlayerTopList.Logger().warning(name + " -> 不是有效的实体: '" + entityName + "'");
                 }
             }
         }
@@ -79,19 +79,18 @@ public class TopListLoader {
             ListsMgr.addNewList(name, Statistic.valueOf(type), entities);
         }
 
-//        PlayerTopList.Logger().info("材料列表: " + materials);
-//        PlayerTopList.Logger().info("实体列表: " + entities);
-
         PlayerTopList.Logger().info("成功添加列表: " + name + " (" + type + ")");
     }
 
     protected static void loadTopLists(ConfigurationSection section) {
         if (section == null) return;
 
+        // 遍历榜单项目
         for (String name : section.getKeys(false)) {
             ConfigurationSection listSection = section.getConfigurationSection(name);
             if (listSection == null) continue;
 
+            // 榜单参数
             String type = listSection.getString("type");
             List<String> material = listSection.getStringList("material");
             List<String> entity = listSection.getStringList("entity");

@@ -6,6 +6,7 @@ import cn.JvavRE.playerTopList.tasks.TopList;
 import cn.JvavRE.playerTopList.utils.Digit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class Command implements CommandExecutor {
@@ -35,13 +36,18 @@ public class Command implements CommandExecutor {
     }
 
     private void onShow(CommandSender sender, String[] args) {
-        if (!sender.hasPermission("playertoplist.view")) {
-            sender.sendMessage("你没有权限");
+        if (!(sender instanceof Player player)) {
+            sender.sendMessage("只有玩家才能使用此命令");
+            return;
+        }
+
+        if (!player.hasPermission("playertoplist.view")) {
+            player.sendMessage("你没有权限");
             return;
         }
 
         if (!(args.length > 1)) {
-            sender.sendMessage("用法错误");
+            player.sendMessage("用法错误");
             return;
         }
 
@@ -49,7 +55,7 @@ public class Command implements CommandExecutor {
         String pageStr = args.length > 2 ? args[2] : "1";
 
         if (!Digit.isDigit(pageStr)) {
-            sender.sendMessage("用法错误");
+            player.sendMessage("用法错误");
             return;
         }
 
@@ -57,10 +63,10 @@ public class Command implements CommandExecutor {
         TopList topList = ListsMgr.getListByName(name);
 
         if (topList == null) {
-            sender.sendMessage("未找到列表");
+            player.sendMessage("未找到列表");
             return;
         }
 
-        sender.sendMessage(topList.toComponent(page));
+        topList.show(player, page);
     }
 }

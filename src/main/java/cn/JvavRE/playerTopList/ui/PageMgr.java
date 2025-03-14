@@ -9,29 +9,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PageMgr {
-    private static final List<String> contents = new ArrayList<>();
+    private final List<Component> contents = new ArrayList<>();
 
-    public static void updatePages(List<String> components){
+    public void updatePages(List<Component> components) {
         contents.clear();
         contents.addAll(components);
     }
 
-    public static int getTotalPage(){
+    public int getTotalPages() {
         return (contents.size() + Config.getPageSize() - 1) / Config.getPageSize();
     }
 
-    public static String getPage(int page){
+    public Component getPage(int page) {
         // 分页计算
         int pageSize = Config.getPageSize();
         int start = (page - 1) * pageSize;
         int end = Math.min(start + pageSize, contents.size());
-        int totalPage = getTotalPage();
 
-        StringBuilder builder = new StringBuilder();
+        TextComponent.Builder builder = Component.text();
         for (int i = start; i < end; i++) {
-            builder.append(contents.get(i)).append("<newline>");
+            builder.append(contents.get(i)).appendNewline();
         }
 
-        return builder.toString();
+        return builder.build();
     }
 }

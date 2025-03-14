@@ -1,8 +1,6 @@
 package cn.JvavRE.playerTopList.tasks;
 
 import cn.JvavRE.playerTopList.PlayerTopList;
-import cn.JvavRE.playerTopList.config.UIComponent;
-import cn.JvavRE.playerTopList.config.UIConfig;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Statistic;
@@ -37,16 +35,5 @@ public record PlayerData(OfflinePlayer player, int count) {
         }
 
         return new PlayerData(player, total);
-    }
-
-
-    //TODO: 添加自定义格式
-    public String toMiniMessage() {
-        String playerName = player.getName() != null ? player.getName() : "null";
-
-        return UIConfig.get(UIComponent.ITEM)
-                .replace("{playerName}", playerName)
-                .replace("{spacer}", UIConfig.get(UIComponent.SPACER))
-                .replace("{count}", String.valueOf(count));
     }
 }

@@ -24,7 +24,10 @@ public class ListsManager {
     public static void startTask() {
         updateTask = Bukkit.getAsyncScheduler().runAtFixedRate(
                 plugin,
-                task -> topLists.forEach(TopList::updateTopList),
+                task -> {
+                    topLists.forEach(TopList::updateTopList);
+                    plugin.getLogger().info("排行榜已更新");
+                },
                 1,
                 Config.getUpdateInterval(),
                 TimeUnit.SECONDS

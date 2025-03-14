@@ -32,6 +32,7 @@ public class TopList {
         playerDataList.clear();
         for (OfflinePlayer player : Bukkit.getOfflinePlayers()) {
             playerDataList.add(PlayerData.of(player, type, materials));
+            Bukkit.getLogger().info(materials.toString());
         }
         sort();
     }

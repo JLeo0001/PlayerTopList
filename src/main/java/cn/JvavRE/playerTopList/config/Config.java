@@ -10,6 +10,10 @@ public class Config {
 
     public static void init(PlayerTopList plugin) {
         Config.plugin = plugin;
+
+        UIConfig.setPlugin(plugin);
+        TopListLoader.setPlugin(plugin);
+
         plugin.saveDefaultConfig();
         loadConfig();
     }

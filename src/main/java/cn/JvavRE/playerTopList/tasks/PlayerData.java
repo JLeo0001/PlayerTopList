@@ -14,11 +14,8 @@ public record PlayerData(OfflinePlayer player, int count) {
     public static PlayerData of(OfflinePlayer player, Statistic type, List<Material> materials) {
         int total = 0;
 
-        if (!type.isSubstatistic()) {
-
-            total = player.getStatistic(type);
-
-        } else {
+        if (!type.isSubstatistic()) total = player.getStatistic(type);
+        else {
             for (Material material : materials) {
                 try {
 

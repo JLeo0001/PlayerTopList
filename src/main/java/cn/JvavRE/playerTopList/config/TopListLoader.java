@@ -2,6 +2,7 @@ package cn.JvavRE.playerTopList.config;
 
 import cn.JvavRE.playerTopList.PlayerTopList;
 import cn.JvavRE.playerTopList.tasks.ListsMgr;
+import cn.JvavRE.playerTopList.utils.SubStatistic;
 import org.bukkit.Material;
 import org.bukkit.Statistic;
 import org.bukkit.configuration.ConfigurationSection;
@@ -37,39 +38,33 @@ public class TopListLoader {
 
         // 材料类型加载
         List<Material> materials = new ArrayList<>();
-        if (!materialNames.isEmpty() && materialNames.getFirst().equalsIgnoreCase("all")) {
-            for (Material material : Material.values()) {
-                if (material.isSolid()) materials.add(material);
-            }
-
-        } else {
-            for (String materialName : materialNames) {
-                Material material = Material.matchMaterial(materialName);
-                if (material == null) {
-                    PlayerTopList.Logger().warning(name + " -> 不是有效的材料: '" + materialName + "'");
-                    continue;
-                }
+        for (String materialName : materialNames) {
+            Material material = Material.matchMaterial(materialName);
+            if (material != null) {
                 materials.add(material);
+            } else if (SubStatistic.isValid(materialName)) {
+                materials.addAll(SubStatistic.getMaterials(materialName));
+            } else {
+                PlayerTopList.Logger().warning(name + " -> 不是有效的材料: '" + materialName + "'");
             }
         }
 
         // 实体类型加载
         List<EntityType> entities = new ArrayList<>();
-        if (!entityNames.isEmpty() && entityNames.getFirst().equalsIgnoreCase("all")) {
-            for (EntityType entityType : EntityType.values()) {
-                if (entityType.isAlive()) entities.add(entityType);
-            }
-
-        } else {
-            for (String entityName : entityNames) {
-                try {
-                    EntityType entityType = EntityType.valueOf(entityName);
-                    entities.add(entityType);
-                } catch (Exception e) {
-                    PlayerTopList.Logger().warning(name + " -> 不是有效的实体: '" + entityName + "'");
-                }
+        for (String entityName : entityNames) {
+            EntityType entityType = EntityType.fromName(entityName);
+            if (entityType != null) {
+                entities.add(entityType);
+            } else if (SubStatistic.isValid(entityName)) {
+                entities.addAll(SubStatistic.getEntities(entityName));
+            } else {
+                PlayerTopList.Logger().warning(name + " -> 不是有效的实体: '" + entityName + "'");
             }
         }
+
+        // 去重
+        materials = materials.stream().distinct().toList();
+        entities = entities.stream().distinct().toList();
 
         // 根据type类型设置对应子项目
         Statistic statistic = Statistic.valueOf(type);

@@ -15,7 +15,7 @@ lists:
 
   block:
     type: MINE_BLOCK
-    material: [all]
+    material: [solid]
 
   entity:
     type: KILL_ENTITY

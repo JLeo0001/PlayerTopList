@@ -10,6 +10,7 @@ import java.util.List;
 
 public record PlayerData(OfflinePlayer player, int count) {
 
+    // TODO: 优化加载方式减少占用
     public static PlayerData of(OfflinePlayer player, Statistic type, List<?> subArgs) {
         int total = 0;
 

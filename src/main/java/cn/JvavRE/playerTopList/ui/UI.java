@@ -27,16 +27,16 @@ public class UI {
 
     public void update() {
         tempList.clear();
-        for (int i = 0; i < topList.getPlayerDataList().size(); i++) {
-            PlayerData playerData = topList.getPlayerDataList().get(i);
-            String playerName = playerData.player().getName() != null ? playerData.player().getName() : "null";
+        for (int i = 0; i < topList.getDataList().size(); i++) {
+            PlayerData playerData = topList.getDataList().get(i);
+            String playerName = playerData.getPlayer().getName() != null ? playerData.getPlayer().getName() : "null";
 
             int num = i + 1;
             tempList.add(UIConfig.get(UIComponent.ITEM)
                     .replaceText(config -> config.matchLiteral("{num}").replacement(String.valueOf(num)))
                     .replaceText(config -> config.matchLiteral("{playerName}").replacement(playerName))
                     .replaceText(config -> config.matchLiteral("{spacer}").replacement(UIConfig.get(UIComponent.SPACER)))
-                    .replaceText(config -> config.matchLiteral("{count}").replacement(String.valueOf(playerData.count())))
+                    .replaceText(config -> config.matchLiteral("{count}").replacement(String.valueOf(playerData.getCount())))
             );
         }
 

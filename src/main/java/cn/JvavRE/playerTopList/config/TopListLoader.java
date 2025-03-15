@@ -44,7 +44,7 @@ public class TopListLoader {
                 List<EntityType> entities = new ArrayList<>();
 
                 if (entityNames.isEmpty()) {
-                    PlayerTopList.Logger().warning(name + " -> 实体类型列表为空, 使用默认实体" );
+                    PlayerTopList.Logger().warning(name + " -> 实体类型列表为空, 使用默认实体");
                     entities = SubStatistic.getEntities("alive");
                 }
 
@@ -71,7 +71,7 @@ public class TopListLoader {
 
                 ListsMgr.addNewList(name, Statistic.valueOf(type), entities);
             }
-            case BLOCK-> {
+            case BLOCK -> {
                 // 材料类型加载
                 List<Material> materials = new ArrayList<>();
 

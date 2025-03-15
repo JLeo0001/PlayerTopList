@@ -1,6 +1,7 @@
 package cn.JvavRE.playerTopList.command;
 
 import cn.JvavRE.playerTopList.PlayerTopList;
+import cn.JvavRE.playerTopList.config.Config;
 import cn.JvavRE.playerTopList.tasks.ListsMgr;
 import cn.JvavRE.playerTopList.tasks.TopList;
 import cn.JvavRE.playerTopList.utils.Digit;
@@ -9,12 +10,14 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 public class Command implements CommandExecutor {
-    private final PlayerTopList plugin;
+    //private final PlayerTopList plugin;
 
     public Command(PlayerTopList plugin) {
-        this.plugin = plugin;
-        plugin.getCommand("ptl").setExecutor(this);
+        //this.plugin = plugin;
+        Objects.requireNonNull(plugin.getCommand("ptl")).setExecutor(this);
     }
 
     @Override
@@ -33,6 +36,14 @@ public class Command implements CommandExecutor {
     }
 
     private void onReload(CommandSender sender, String[] args) {
+        if (!sender.hasPermission("playertoplist.admin")) {
+            sender.sendMessage("你没有权限");
+            return;
+        }
+
+        Config.reloadConfig();
+        ListsMgr.restart();
+        sender.sendMessage("重载成功");
     }
 
     private void onShow(CommandSender sender, String[] args) {
@@ -60,8 +71,13 @@ public class Command implements CommandExecutor {
         }
 
         int page = Integer.parseInt(pageStr);
-        TopList topList = ListsMgr.getListByName(name);
 
+        if (name.equalsIgnoreCase("all")) {
+            ListsMgr.showLists(player);
+            return;
+        }
+
+        TopList topList = ListsMgr.getListByName(name);
         if (topList == null) {
             player.sendMessage("未找到列表");
             return;

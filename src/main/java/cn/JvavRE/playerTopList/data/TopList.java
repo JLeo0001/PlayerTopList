@@ -1,4 +1,4 @@
-package cn.JvavRE.playerTopList.tasks;
+package cn.JvavRE.playerTopList.data;
 
 import cn.JvavRE.playerTopList.ui.UI;
 import net.kyori.adventure.text.format.TextColor;
@@ -7,27 +7,32 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.Statistic;
 import org.bukkit.entity.Player;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
 public class TopList {
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private final String name;
     private final Statistic type;
     private final List<?> subArgs;
     private final ArrayList<PlayerData> dataList;
     private final UI ui;
+    private LocalDateTime lastUpdate;
 
     public TopList(String name, TextColor nameColor, Statistic type, List<?> subArgs) {
         this.name = name;
         this.type = type;
         this.subArgs = subArgs;
         this.dataList = new ArrayList<>();
+        this.lastUpdate = LocalDateTime.now();
         this.ui = new UI(this, nameColor);
 
         initDataList();
-        updateTopList();
+        updateDataList();
     }
 
     private void initDataList() {
@@ -35,10 +40,10 @@ public class TopList {
         for (OfflinePlayer player : Bukkit.getOfflinePlayers()) {
             dataList.add(PlayerData.of(player));
         }
-        sort();
+        sortDataList();
     }
 
-    protected void updateTopList() {
+    protected void updateDataList() {
         List<OfflinePlayer> players = Arrays.stream(Bukkit.getOfflinePlayers()).toList();
 
         // 检查是否存在新玩家, 不需要每次都刷新dataList
@@ -52,12 +57,16 @@ public class TopList {
         }
 
         dataList.forEach(playerData -> playerData.updateCount(type, subArgs));
-        sort();
+        sortDataList();
 
+        // 更新时间
+        lastUpdate = LocalDateTime.now();
+
+        // 更新ui
         ui.update();
     }
 
-    private void sort() {
+    private void sortDataList() {
         dataList.sort(Comparator.comparingInt(PlayerData::getCount).reversed());
     }
 
@@ -75,6 +84,10 @@ public class TopList {
 
     public String getName() {
         return name;
+    }
+
+    public String getUpdateTime() {
+        return lastUpdate.format(formatter);
     }
 
     public UI getUI() {

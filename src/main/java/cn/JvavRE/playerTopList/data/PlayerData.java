@@ -1,4 +1,4 @@
-package cn.JvavRE.playerTopList.tasks;
+package cn.JvavRE.playerTopList.data;
 
 import cn.JvavRE.playerTopList.PlayerTopList;
 import org.bukkit.Material;

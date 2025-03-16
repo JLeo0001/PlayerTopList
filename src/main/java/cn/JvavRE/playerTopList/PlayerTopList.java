@@ -2,7 +2,7 @@ package cn.JvavRE.playerTopList;
 
 import cn.JvavRE.playerTopList.command.Command;
 import cn.JvavRE.playerTopList.config.Config;
-import cn.JvavRE.playerTopList.tasks.ListsMgr;
+import cn.JvavRE.playerTopList.data.ListsMgr;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.logging.Logger;

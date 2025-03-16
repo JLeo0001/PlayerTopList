@@ -1,7 +1,7 @@
 package cn.JvavRE.playerTopList.config;
 
 import cn.JvavRE.playerTopList.PlayerTopList;
-import cn.JvavRE.playerTopList.tasks.ListsMgr;
+import cn.JvavRE.playerTopList.data.ListsMgr;
 import cn.JvavRE.playerTopList.utils.SubStatistic;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Material;
@@ -43,7 +43,7 @@ public class TopListLoader {
         }
 
         if (!isColor(nameColor)) {
-            PlayerTopList.Logger().warning("不是有效的颜色: '" + nameColor + "'"+", 使用默认颜色");
+            PlayerTopList.Logger().warning("不是有效的颜色: '" + nameColor + "'" + ", 使用默认颜色");
             nameColor = "#FFFFFF";
         }
 
@@ -82,7 +82,7 @@ public class TopListLoader {
                 // 去重
                 entities = entities.stream().distinct().toList();
 
-                ListsMgr.addNewList(name, color,Statistic.valueOf(type), entities);
+                ListsMgr.addNewList(name, color, Statistic.valueOf(type), entities);
             }
             case BLOCK -> {
                 // 材料类型加载
@@ -107,7 +107,7 @@ public class TopListLoader {
                 // 整理列表
                 materials = materials.stream().distinct().filter(Material::isBlock).toList();
 
-                ListsMgr.addNewList(name,color, Statistic.valueOf(type), materials);
+                ListsMgr.addNewList(name, color, Statistic.valueOf(type), materials);
             }
             case ITEM -> {
                 // 材料类型加载
@@ -132,9 +132,9 @@ public class TopListLoader {
                 // 整理列表
                 materials = materials.stream().distinct().filter(Material::isItem).toList();
 
-                ListsMgr.addNewList(name, color,Statistic.valueOf(type), materials);
+                ListsMgr.addNewList(name, color, Statistic.valueOf(type), materials);
             }
-            case UNTYPED -> ListsMgr.addNewList(name, color,Statistic.valueOf(type), new ArrayList<>());
+            case UNTYPED -> ListsMgr.addNewList(name, color, Statistic.valueOf(type), new ArrayList<>());
         }
 
         PlayerTopList.Logger().info("成功添加列表: " + name + " (" + type + ")");

@@ -1,4 +1,4 @@
-package cn.JvavRE.playerTopList.tasks;
+package cn.JvavRE.playerTopList.data;
 
 import cn.JvavRE.playerTopList.PlayerTopList;
 import cn.JvavRE.playerTopList.config.Config;
@@ -33,7 +33,7 @@ public class ListsMgr {
         updateTask = Bukkit.getAsyncScheduler().runAtFixedRate(
                 plugin,
                 task -> {
-                    topLists.forEach(TopList::updateTopList);
+                    topLists.forEach(TopList::updateDataList);
                     plugin.getLogger().info("排行榜已更新");
                 },
                 1,

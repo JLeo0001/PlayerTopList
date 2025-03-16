@@ -20,6 +20,7 @@ public class Config {
 
         UIConfig.loadConfig(plugin.getConfig().getConfigurationSection("ui"));
         TopListLoader.loadTopLists(plugin.getConfig().getConfigurationSection("lists"));
+
         PlayerTopList.Logger().info("配置加载完成");
     }
 

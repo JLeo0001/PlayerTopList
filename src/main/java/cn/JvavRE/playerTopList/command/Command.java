@@ -2,8 +2,8 @@ package cn.JvavRE.playerTopList.command;
 
 import cn.JvavRE.playerTopList.PlayerTopList;
 import cn.JvavRE.playerTopList.config.Config;
-import cn.JvavRE.playerTopList.tasks.ListsMgr;
-import cn.JvavRE.playerTopList.tasks.TopList;
+import cn.JvavRE.playerTopList.data.ListsMgr;
+import cn.JvavRE.playerTopList.data.TopList;
 import cn.JvavRE.playerTopList.utils.Digit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

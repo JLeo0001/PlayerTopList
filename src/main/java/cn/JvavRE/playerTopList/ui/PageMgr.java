@@ -5,22 +5,14 @@ import cn.JvavRE.playerTopList.config.Config;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class PageMgr {
-    private final List<Component> contents = new ArrayList<>();
-
-    public void updatePages(List<Component> components) {
-        contents.clear();
-        contents.addAll(components);
-    }
-
-    public int getTotalPages() {
+    public static int getTotalPages(List<Component> contents) {
         return (contents.size() + Config.getPageSize() - 1) / Config.getPageSize();
     }
 
-    public Component getPage(int page) {
+    public static Component getPage(List<Component> contents, int page) {
         // 分页计算
         int pageSize = Config.getPageSize();
         int start = (page - 1) * pageSize;

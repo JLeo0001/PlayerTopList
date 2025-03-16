@@ -14,7 +14,6 @@ import java.util.List;
 public class UI {
     private final TopList topList;
     private final Component coloredName;
-    private final PageMgr pageMgr = new PageMgr();
     private final List<Component> tempList = new ArrayList<>();
 
     public UI(TopList topList, TextColor color) {
@@ -42,16 +41,16 @@ public class UI {
                     .replaceText(config -> config.matchLiteral("{count}").replacement(String.valueOf(playerData.getCount())))
             );
         }
-
-        pageMgr.updatePages(tempList);
     }
 
     public void show(Player player, int page) {
+        int  totalPage = PageMgr.getTotalPages(tempList);
+
         player.sendMessage(UIConfig.get(UIComponent.MAIN_UI)
-                .replaceText(config -> config.matchLiteral("{items}").replacement(pageMgr.getPage(page)))
+                .replaceText(config -> config.matchLiteral("{items}").replacement(PageMgr.getPage(tempList,page)))
                 .replaceText(config -> config.matchLiteral("{listName}").replacement(coloredName))
                 .replaceText(config -> config.matchLiteral("{updateTime}").replacement(topList.getUpdateTime()))
-                .replaceText(config -> config.matchLiteral("{totalIndex}").replacement(String.valueOf(pageMgr.getTotalPages())))
+                .replaceText(config -> config.matchLiteral("{totalIndex}").replacement(String.valueOf(totalPage)))
                 .replaceText(config -> config.matchLiteral("{currentIndex}").replacement(String.valueOf(page)))
                 .replaceText(config -> config.matchLiteral("{prevButton}").replacement(
                         page <= 1 ? Component.empty()
@@ -61,7 +60,7 @@ public class UI {
 
                 ))
                 .replaceText(config -> config.matchLiteral("{nextButton}").replacement(
-                        page >= pageMgr.getTotalPages() ? Component.empty()
+                        page >= totalPage ? Component.empty()
                                 : UIConfig.get(UIComponent.SPACER)
                                 .replaceText(subConfig -> subConfig.matchLiteral("{nextIndex}").replacement(String.valueOf(page + 1)))
                                 .replaceText(subConfig -> subConfig.matchLiteral("{listName}").replacement(topList.getName()))

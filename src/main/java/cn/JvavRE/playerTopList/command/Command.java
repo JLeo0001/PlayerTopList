@@ -5,6 +5,7 @@ import cn.JvavRE.playerTopList.config.Config;
 import cn.JvavRE.playerTopList.data.ListsMgr;
 import cn.JvavRE.playerTopList.data.TopList;
 import cn.JvavRE.playerTopList.utils.Digit;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -13,10 +14,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 
 public class Command implements CommandExecutor {
-    //private final PlayerTopList plugin;
+    private final PlayerTopList plugin;
 
     public Command(PlayerTopList plugin) {
-        //this.plugin = plugin;
+        this.plugin = plugin;
         Objects.requireNonNull(plugin.getCommand("ptl")).setExecutor(this);
     }
 
@@ -41,9 +42,14 @@ public class Command implements CommandExecutor {
             return;
         }
 
-        Config.reloadConfig();
-        ListsMgr.restart();
-        sender.sendMessage("重载成功");
+        Bukkit.getAsyncScheduler().runNow(plugin, task -> {
+            sender.sendMessage("正在重载...");
+
+            ListsMgr.restart();
+            Config.reloadConfig();
+
+            sender.sendMessage("重载成功");
+        });
     }
 
     private void onShow(CommandSender sender, String[] args) {

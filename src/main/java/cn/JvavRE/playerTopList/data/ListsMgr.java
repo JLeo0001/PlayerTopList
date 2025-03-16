@@ -25,8 +25,9 @@ public class ListsMgr {
 
     public static void init(PlayerTopList plugin) {
         ListsMgr.plugin = plugin;
-        listsUI = Component.text();
         topLists = new ArrayList<>();
+
+        initListsUI();
     }
 
     public static void startTask() {
@@ -42,15 +43,19 @@ public class ListsMgr {
         );
     }
 
+    private static void initListsUI() {
+        listsUI = Component.text();
+        listsUI.append(Component.text("==================").decorate(TextDecoration.BOLD)).appendNewline();
+    }
+
     public static void stopTask() {
         updateTask.cancel();
     }
 
-    public static void restart() {
+    public static void stop() {
         stopTask();
         topLists.clear();
-        listsUI = Component.text();
-        startTask();
+        initListsUI();
     }
 
     public static void addNewList(String name, TextColor color, Statistic type, List<?> subArgs) {
@@ -62,6 +67,10 @@ public class ListsMgr {
                 .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/ptl show " + name))
                 .hoverEvent(HoverEvent.showText(Component.text("点击查看排行榜")))
         ).appendSpace();
+    }
+
+    public static List<String> getListsName() {
+        return topLists.stream().map(TopList::getName).toList();
     }
 
     public static void showLists(Player player) {

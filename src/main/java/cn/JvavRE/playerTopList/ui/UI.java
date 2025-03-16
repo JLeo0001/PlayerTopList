@@ -44,10 +44,10 @@ public class UI {
     }
 
     public void show(Player player, int page) {
-        int  totalPage = PageMgr.getTotalPages(tempList);
+        int totalPage = PageMgr.getTotalPages(tempList);
 
         player.sendMessage(UIConfig.get(UIComponent.MAIN_UI)
-                .replaceText(config -> config.matchLiteral("{items}").replacement(PageMgr.getPage(tempList,page)))
+                .replaceText(config -> config.matchLiteral("{items}").replacement(PageMgr.getPage(tempList, page)))
                 .replaceText(config -> config.matchLiteral("{listName}").replacement(coloredName))
                 .replaceText(config -> config.matchLiteral("{updateTime}").replacement(topList.getUpdateTime()))
                 .replaceText(config -> config.matchLiteral("{totalIndex}").replacement(String.valueOf(totalPage)))

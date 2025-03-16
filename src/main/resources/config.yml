@@ -2,7 +2,7 @@ page-size: 10
 update-interval: 60
 
 ui:
-  header: "<aqua>================[ <hover:show_text:'<yellow>更新时间: <#FFA500>{updateTime}</#FFA500></yellow>'>{listName} ]================</aqua>"
+  header: "<aqua>================ <hover:show_text:'<yellow>更新时间: <#FFA500>{updateTime}</#FFA500></yellow>'>{listName} ================</aqua>"
   footer: "<aqua>{prevButton}当前: (<white>{currentIndex}</white>/<white>{totalIndex}</white>){nextButton}</aqua>"
   prevButton: "<click:run_command:'/ptl show {listName} {prevIndex}'><hover:show_text:'上一页'><dark_aqua> <- </dark_aqua></hover></click>"
   nextButton: "<click:run_command:'/ptl show {listName} {nextIndex}'><hover:show_text:'下一页'><dark_aqua> -> </dark_aqua></hover></click>"

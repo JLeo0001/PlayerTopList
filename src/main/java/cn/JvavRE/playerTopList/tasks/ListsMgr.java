@@ -7,6 +7,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.Statistic;
@@ -52,14 +53,15 @@ public class ListsMgr {
         startTask();
     }
 
-    public static void addNewList(String name, Statistic type, List<?> subArgs) {
-        topLists.add(new TopList(name, type, subArgs));
+    public static void addNewList(String name, TextColor color, Statistic type, List<?> subArgs) {
+        TopList newList = new TopList(name, color, type, subArgs);
+        topLists.add(newList);
 
-        listsUI.append(Component.text(" [" + name + "] ")
+        listsUI.append(newList.getUI().getColoredName()
                 .decorate(TextDecoration.BOLD)
                 .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/ptl show " + name))
-                .hoverEvent(HoverEvent.showText(Component.text("点击查看排行榜[" + name + "]")))
-        );
+                .hoverEvent(HoverEvent.showText(Component.text("点击查看排行榜")))
+        ).appendSpace();
     }
 
     public static void showLists(Player player) {

@@ -1,6 +1,7 @@
 package cn.JvavRE.playerTopList.tasks;
 
 import cn.JvavRE.playerTopList.ui.UI;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Statistic;
@@ -18,12 +19,12 @@ public class TopList {
     private final ArrayList<PlayerData> dataList;
     private final UI ui;
 
-    public TopList(String name, Statistic type, List<?> subArgs) {
+    public TopList(String name, TextColor nameColor, Statistic type, List<?> subArgs) {
         this.name = name;
         this.type = type;
         this.subArgs = subArgs;
         this.dataList = new ArrayList<>();
-        this.ui = new UI(this);
+        this.ui = new UI(this, nameColor);
 
         initDataList();
         updateTopList();
@@ -74,5 +75,9 @@ public class TopList {
 
     public String getName() {
         return name;
+    }
+
+    public UI getUI() {
+        return ui;
     }
 }

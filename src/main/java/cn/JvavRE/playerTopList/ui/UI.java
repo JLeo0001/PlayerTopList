@@ -5,6 +5,7 @@ import cn.JvavRE.playerTopList.config.UIConfig;
 import cn.JvavRE.playerTopList.tasks.PlayerData;
 import cn.JvavRE.playerTopList.tasks.TopList;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.entity.Player;
 
 import java.time.LocalDateTime;
@@ -17,12 +18,18 @@ public class UI {
     private final TopList topList;
     private final PageMgr pageMgr = new PageMgr();
     private final List<Component> tempList = new ArrayList<>();
+    private final Component coloredName;
     private LocalDateTime lastUpdate;
 
-
-    public UI(TopList topList) {
+    public UI(TopList topList, TextColor color) {
         this.topList = topList;
+        this.coloredName = getColoredName(color);
+
         update();
+    }
+
+    private Component getColoredName(TextColor color) {
+        return Component.text("[" + topList.getName() + "]").color(color);
     }
 
     public void update() {
@@ -47,7 +54,7 @@ public class UI {
     public void show(Player player, int page) {
         player.sendMessage(UIConfig.get(UIComponent.MAIN_UI)
                 .replaceText(config -> config.matchLiteral("{items}").replacement(pageMgr.getPage(page)))
-                .replaceText(config -> config.matchLiteral("{listName}").replacement(topList.getName()))
+                .replaceText(config -> config.matchLiteral("{listName}").replacement(coloredName))
                 .replaceText(config -> config.matchLiteral("{updateTime}").replacement(lastUpdate.format(formatter)))
                 .replaceText(config -> config.matchLiteral("{totalIndex}").replacement(String.valueOf(pageMgr.getTotalPages())))
                 .replaceText(config -> config.matchLiteral("{currentIndex}").replacement(String.valueOf(page)))
@@ -65,5 +72,9 @@ public class UI {
                                 .replaceText(subConfig -> subConfig.matchLiteral("{listName}").replacement(topList.getName()))
                 ))
         );
+    }
+
+    public Component getColoredName() {
+        return coloredName;
     }
 }

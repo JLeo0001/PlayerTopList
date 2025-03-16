@@ -3,6 +3,7 @@ package cn.JvavRE.playerTopList.config;
 import cn.JvavRE.playerTopList.PlayerTopList;
 import cn.JvavRE.playerTopList.tasks.ListsMgr;
 import cn.JvavRE.playerTopList.utils.SubStatistic;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Material;
 import org.bukkit.Statistic;
 import org.bukkit.configuration.ConfigurationSection;
@@ -25,7 +26,12 @@ public class TopListLoader {
         return name != null && !name.isEmpty();
     }
 
-    private static void addTopListToManager(String name, String type, List<String> materialNames, List<String> entityNames) {
+    private static boolean isColor(String color) {
+        TextColor r = TextColor.fromHexString(color);
+        return r != null;
+    }
+
+    private static void addTopListToManager(String name, String nameColor, String type, List<String> materialNames, List<String> entityNames) {
         if (!isName(name)) {
             PlayerTopList.Logger().warning("不是有效的列表名称: '" + name + "'");
             return;
@@ -35,6 +41,13 @@ public class TopListLoader {
             PlayerTopList.Logger().warning("不是有效的统计类型: '" + type + "'");
             return;
         }
+
+        if (!isColor(nameColor)) {
+            PlayerTopList.Logger().warning("不是有效的颜色: '" + nameColor + "'"+", 使用默认颜色");
+            nameColor = "#FFFFFF";
+        }
+
+        TextColor color = TextColor.fromHexString(nameColor);
 
         // 根据类型处理子参数列表
         Statistic statistic = Statistic.valueOf(type);
@@ -69,7 +82,7 @@ public class TopListLoader {
                 // 去重
                 entities = entities.stream().distinct().toList();
 
-                ListsMgr.addNewList(name, Statistic.valueOf(type), entities);
+                ListsMgr.addNewList(name, color,Statistic.valueOf(type), entities);
             }
             case BLOCK -> {
                 // 材料类型加载
@@ -94,7 +107,7 @@ public class TopListLoader {
                 // 整理列表
                 materials = materials.stream().distinct().filter(Material::isBlock).toList();
 
-                ListsMgr.addNewList(name, Statistic.valueOf(type), materials);
+                ListsMgr.addNewList(name,color, Statistic.valueOf(type), materials);
             }
             case ITEM -> {
                 // 材料类型加载
@@ -119,9 +132,9 @@ public class TopListLoader {
                 // 整理列表
                 materials = materials.stream().distinct().filter(Material::isItem).toList();
 
-                ListsMgr.addNewList(name, Statistic.valueOf(type), materials);
+                ListsMgr.addNewList(name, color,Statistic.valueOf(type), materials);
             }
-            case UNTYPED -> ListsMgr.addNewList(name, Statistic.valueOf(type), new ArrayList<>());
+            case UNTYPED -> ListsMgr.addNewList(name, color,Statistic.valueOf(type), new ArrayList<>());
         }
 
         PlayerTopList.Logger().info("成功添加列表: " + name + " (" + type + ")");
@@ -137,10 +150,11 @@ public class TopListLoader {
 
             // 榜单参数
             String type = listSection.getString("type");
+            String nameColor = listSection.getString("color", "#FFFFFF");
             List<String> material = listSection.getStringList("material");
             List<String> entity = listSection.getStringList("entity");
 
-            addTopListToManager(name, type, material, entity);
+            addTopListToManager(name, nameColor, type, material, entity);
         }
     }
 }

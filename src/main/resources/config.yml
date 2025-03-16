@@ -11,13 +11,16 @@ ui:
 
 lists:
   time:
+    color: "#FF0000"
     type: PLAY_ONE_MINUTE
 
   block:
+    color: "#FFA500"
     type: MINE_BLOCK
     material: [solid]
 
   entity:
+    color: "#FF00FF"
     type: KILL_ENTITY
     entity: [all]
 

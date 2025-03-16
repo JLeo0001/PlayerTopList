@@ -45,8 +45,9 @@ public class Command implements CommandExecutor {
         Bukkit.getAsyncScheduler().runNow(plugin, task -> {
             sender.sendMessage("正在重载...");
 
-            ListsMgr.restart();
+            ListsMgr.stopTask();
             Config.reloadConfig();
+
 
             sender.sendMessage("重载成功");
         });

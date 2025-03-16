@@ -5,6 +5,7 @@ import cn.JvavRE.playerTopList.config.UIConfig;
 import cn.JvavRE.playerTopList.data.PlayerData;
 import cn.JvavRE.playerTopList.data.TopList;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.entity.Player;
 
@@ -44,27 +45,21 @@ public class UI {
     }
 
     public void show(Player player, int page) {
-        int  totalPage = PageMgr.getTotalPages(tempList);
+        int totalPage = PageMgr.getTotalPages(tempList);
+
+        Component nextButton = UIConfig.get(UIComponent.NEXT_BUTTON)
+                .clickEvent(ClickEvent.runCommand("/ptl show " + topList.getName() + " " + (page + 1)));
+        Component prevButton = UIConfig.get(UIComponent.PREV_BUTTON)
+                .clickEvent(ClickEvent.runCommand("/ptl show " + topList.getName() + " " + (page - 1)));
 
         player.sendMessage(UIConfig.get(UIComponent.MAIN_UI)
-                .replaceText(config -> config.matchLiteral("{items}").replacement(PageMgr.getPage(tempList,page)))
+                .replaceText(config -> config.matchLiteral("{items}").replacement(PageMgr.getPage(tempList, page)))
                 .replaceText(config -> config.matchLiteral("{listName}").replacement(coloredName))
                 .replaceText(config -> config.matchLiteral("{updateTime}").replacement(topList.getUpdateTime()))
                 .replaceText(config -> config.matchLiteral("{totalIndex}").replacement(String.valueOf(totalPage)))
                 .replaceText(config -> config.matchLiteral("{currentIndex}").replacement(String.valueOf(page)))
-                .replaceText(config -> config.matchLiteral("{prevButton}").replacement(
-                        page <= 1 ? Component.empty()
-                                : UIConfig.get(UIComponent.SPACER)
-                                .replaceText(subConfig -> subConfig.matchLiteral("{prevIndex}").replacement(String.valueOf(page - 1)))
-                                .replaceText(subConfig -> subConfig.matchLiteral("{listName}").replacement(topList.getName()))
-
-                ))
-                .replaceText(config -> config.matchLiteral("{nextButton}").replacement(
-                        page >= totalPage ? Component.empty()
-                                : UIConfig.get(UIComponent.SPACER)
-                                .replaceText(subConfig -> subConfig.matchLiteral("{nextIndex}").replacement(String.valueOf(page + 1)))
-                                .replaceText(subConfig -> subConfig.matchLiteral("{listName}").replacement(topList.getName()))
-                ))
+                .replaceText(config -> config.matchLiteral("{prevButton}").replacement(page > 1 ? prevButton : Component.empty()))
+                .replaceText(config -> config.matchLiteral("{nextButton}").replacement(page < totalPage ? nextButton : Component.empty()))
         );
     }
 

@@ -25,9 +25,11 @@ public class PlayerData {
     public void updateCount(Statistic type, List<?> subArgs) {
         int total = 0;
 
+        // TODO: 换掉, 每次更新都需要流处理耗费性能
         switch (type.getType()) {
             case UNTYPED -> total = player.getStatistic(type);
             case BLOCK, ITEM -> {
+                // 转换为材料表
                 List<Material> materials = subArgs.stream().filter(Material.class::isInstance).map(Material.class::cast).toList();
                 for (Material material : materials) {
                     try {

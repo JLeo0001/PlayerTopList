@@ -18,6 +18,7 @@ public class PageMgr {
         int start = (page - 1) * pageSize;
         int end = Math.min(start + pageSize, contents.size());
 
+        // 添加组件
         TextComponent.Builder builder = Component.text();
         for (int i = start; i < end; i++) {
             builder.append(contents.get(i)).appendNewline();

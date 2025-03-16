@@ -78,10 +78,6 @@ public class TopList {
         return dataList;
     }
 
-    public Statistic getType() {
-        return type;
-    }
-
     public String getName() {
         return name;
     }

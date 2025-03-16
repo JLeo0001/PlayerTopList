@@ -31,6 +31,7 @@ public class ListsMgr {
     }
 
     public static void startTask() {
+        // 运行更新任务
         updateTask = Bukkit.getAsyncScheduler().runAtFixedRate(
                 plugin,
                 task -> {
@@ -44,6 +45,7 @@ public class ListsMgr {
     }
 
     private static void initListsUI() {
+        // 初始化列表UI
         listsUI = Component.text();
         listsUI.append(Component.text("==================").decorate(TextDecoration.BOLD)).appendNewline();
     }
@@ -62,6 +64,7 @@ public class ListsMgr {
         TopList newList = new TopList(name, color, type, subArgs);
         topLists.add(newList);
 
+        // 列表UI添加项目
         listsUI.append(newList.getUI().getColoredName()
                 .decorate(TextDecoration.BOLD)
                 .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/ptl show " + name))
@@ -79,9 +82,5 @@ public class ListsMgr {
 
     public static TopList getListByName(String name) {
         return topLists.stream().filter(topList -> topList.getName().equals(name)).findFirst().orElse(null);
-    }
-
-    public static TopList getListByType(Statistic type) {
-        return topLists.stream().filter(topList -> topList.getType().equals(type)).findFirst().orElse(null);
     }
 }

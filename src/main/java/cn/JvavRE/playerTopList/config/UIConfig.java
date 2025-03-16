@@ -28,6 +28,7 @@ public class UIConfig {
             for (UIComponent component : UIComponent.values()) {
                 String componentStr = config.getString(component.getName());
 
+                // TODO: 这里deserialize是否会报错?
                 if (componentStr != null) newMap.put(component, MiniMessage.miniMessage().deserialize(componentStr));
                 else newMap.put(component, component.getComponent());
             }
@@ -41,6 +42,7 @@ public class UIConfig {
     }
 
     private static void generateUI() {
+        // 直接缓存UI(不知道有没有性能提升)
         TextComponent.Builder builder = Component.text();
 
         builder.append(get(UIComponent.HEADER)).appendNewline();

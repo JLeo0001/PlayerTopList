@@ -47,9 +47,9 @@ public class TopListLoader {
             nameColor = "#FFFFFF";
         }
 
-        TextColor color = TextColor.fromHexString(nameColor);
-
         // 根据类型处理子参数列表
+        // TODO: 找到一种优化方式处理这一坨
+        TextColor color = TextColor.fromHexString(nameColor);
         Statistic statistic = Statistic.valueOf(type);
         switch (statistic.getType()) {
             case ENTITY -> {

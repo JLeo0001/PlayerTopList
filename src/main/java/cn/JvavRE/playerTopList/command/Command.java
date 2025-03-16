@@ -18,7 +18,10 @@ public class Command implements CommandExecutor {
 
     public Command(PlayerTopList plugin) {
         this.plugin = plugin;
+
+        // 注册命令执行
         Objects.requireNonNull(plugin.getCommand("ptl")).setExecutor(this);
+        Objects.requireNonNull(plugin.getCommand("ptl")).setTabCompleter(new CommandCompleter());
     }
 
     @Override
@@ -42,12 +45,13 @@ public class Command implements CommandExecutor {
             return;
         }
 
+        // 耗时太长, 改成异步加载
         Bukkit.getAsyncScheduler().runNow(plugin, task -> {
             sender.sendMessage("正在重载...");
 
-            ListsMgr.stopTask();
+            ListsMgr.stop();
             Config.reloadConfig();
-
+            ListsMgr.startTask();
 
             sender.sendMessage("重载成功");
         });
@@ -77,13 +81,12 @@ public class Command implements CommandExecutor {
             return;
         }
 
-        int page = Integer.parseInt(pageStr);
-
         if (name.equalsIgnoreCase("all")) {
             ListsMgr.showLists(player);
             return;
         }
 
+        int page = Integer.parseInt(pageStr);
         TopList topList = ListsMgr.getListByName(name);
         if (topList == null) {
             player.sendMessage("未找到列表");

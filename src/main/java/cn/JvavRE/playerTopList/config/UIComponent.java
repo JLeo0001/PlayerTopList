@@ -4,7 +4,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 
 public enum UIComponent {
-    HEADER("header", "<aqua>================[ <hover:show_text:'<yellow>更新时间: <#FFA500>{updateTime}</#FFA500></yellow>'>{listName} ]================</aqua>"),
+    HEADER("header", "<aqua>================[ <hover:show_text:'<yellow>更新时间: <#FFA500>{updateTime}</#FFA500></yellow>'>{listName} ]================</aqua><newline>"),
     FOOTER("footer", "<aqua>{prevButton}当前: (<white>{currentIndex}</white>/<white>{totalIndex}</white>){nextButton}</aqua>"),
     PREV_BUTTON("previous-button", "<click:run_command:'/ptl show {listName} {prevIndex}'><hover:show_text:'上一页'><dark_aqua> <- </dark_aqua></hover></click>"),
     NEXT_BUTTON("next-button", "<click:run_command:'/ptl show {listName} {nextIndex}'><hover:show_text:'下一页'><dark_aqua> -> </dark_aqua></hover></click>"),

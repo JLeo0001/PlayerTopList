@@ -17,7 +17,6 @@ public class PlayerData {
         this.count = count;
     }
 
-    // TODO: 优化加载方式减少占用
     public static PlayerData of(OfflinePlayer player) {
         return new PlayerData(player, 0);
     }
@@ -25,27 +24,24 @@ public class PlayerData {
     public void updateCount(Statistic type, List<?> subArgs) {
         int total = 0;
 
-        // TODO: 换掉, 每次更新都需要流处理耗费性能
+        // 现在只需一次必要的循环
         switch (type.getType()) {
             case UNTYPED -> total = player.getStatistic(type);
             case BLOCK, ITEM -> {
-                // 转换为材料表
-                List<Material> materials = subArgs.stream().filter(Material.class::isInstance).map(Material.class::cast).toList();
-                for (Material material : materials) {
+                for (Object subArg : subArgs) {
                     try {
-                        total += player.getStatistic(type, material);
+                        if (subArg instanceof Material material) total += player.getStatistic(type, material);
                     } catch (IllegalArgumentException e) {
-                        PlayerTopList.Logger().warning("在加载 " + type.name() + " 时出现错误的材料类型: " + material.name());
+                        PlayerTopList.Logger().warning("在加载 " + type.name() + " 时出现错误的材料类型: " + subArg);
                     }
                 }
             }
             case ENTITY -> {
-                List<EntityType> entities = subArgs.stream().filter(EntityType.class::isInstance).map(EntityType.class::cast).toList();
-                for (EntityType entityType : entities) {
+                for (Object subArg : subArgs) {
                     try {
-                        total += player.getStatistic(type, entityType);
+                        if (subArg instanceof EntityType entityType) total += player.getStatistic(type, entityType);
                     } catch (IllegalArgumentException e) {
-                        PlayerTopList.Logger().warning("在加载 " + type.name() + " 时出现错误的实体类型: " + entityType.name());
+                        PlayerTopList.Logger().warning("在加载 " + type.name() + " 时出现错误的实体类型: " + subArg);
                     }
                 }
             }

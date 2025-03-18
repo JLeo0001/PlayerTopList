@@ -1,5 +1,6 @@
 package cn.JvavRE.playerTopList.command;
 
+import cn.JvavRE.playerTopList.PlayerTopList;
 import cn.JvavRE.playerTopList.data.ListsMgr;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -7,13 +8,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class CommandCompleter implements org.bukkit.command.TabCompleter {
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
-        return switch (args.length - 1) {
+        return switch (args.length) {
             case 1 -> onSubCommand(sender, args);
             case 2 -> switch (args[0].toLowerCase()) {
                 case "show" -> onShow(sender, args);

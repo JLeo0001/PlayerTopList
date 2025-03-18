@@ -1,5 +1,7 @@
 package cn.JvavRE.playerTopList.ui;
 
+import cn.JvavRE.playerTopList.PlayerTopList;
+import cn.JvavRE.playerTopList.config.Config;
 import cn.JvavRE.playerTopList.config.UIComponent;
 import cn.JvavRE.playerTopList.config.UIConfig;
 import cn.JvavRE.playerTopList.data.PlayerData;
@@ -7,6 +9,7 @@ import cn.JvavRE.playerTopList.data.TopList;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.TextColor;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -36,10 +39,17 @@ public class UI {
 
             int num = i + 1;
             tempList.add(UIConfig.get(UIComponent.ITEM)
-                    .replaceText(config -> config.matchLiteral("{num}").replacement(String.valueOf(num)))
-                    .replaceText(config -> config.matchLiteral("{playerName}").replacement(playerName))
-                    .replaceText(config -> config.matchLiteral("{spacer}").replacement(UIConfig.get(UIComponent.SPACER)))
-                    .replaceText(config -> config.matchLiteral("{count}").replacement(String.valueOf(playerData.getCount())))
+                    .replaceText(config -> config.match(Config.getPattern())
+                            .replacement((matchResult, builder) -> {
+                                        String key = matchResult.group();
+                                        return switch (key) {
+                                            case "{num}" -> Component.text(String.valueOf(num));
+                                            case "{playerName}" -> Component.text(playerName);
+                                            case "{count}" -> Component.text(String.valueOf(playerData.getCount()));
+                                            default -> Component.text(key);
+                                        };
+                                    }
+                            ))
             );
         }
     }
@@ -47,19 +57,31 @@ public class UI {
     public void show(Player player, int page) {
         int totalPage = PageMgr.getTotalPages(tempList);
 
-        Component nextButton = UIConfig.get(UIComponent.NEXT_BUTTON)
-                .clickEvent(ClickEvent.runCommand("/ptl show " + topList.getName() + " " + (page + 1)));
-        Component prevButton = UIConfig.get(UIComponent.PREV_BUTTON)
-                .clickEvent(ClickEvent.runCommand("/ptl show " + topList.getName() + " " + (page - 1)));
+        Bukkit.getAsyncScheduler().runNow(PlayerTopList.getInstance(), task -> {
+                    Component nextButton = UIConfig.get(UIComponent.NEXT_BUTTON)
+                            .clickEvent(ClickEvent.runCommand("/ptl show " + topList.getName() + " " + (page + 1)));
+                    Component prevButton = UIConfig.get(UIComponent.PREV_BUTTON)
+                            .clickEvent(ClickEvent.runCommand("/ptl show " + topList.getName() + " " + (page - 1)));
 
-        player.sendMessage(UIConfig.get(UIComponent.MAIN_UI)
-                .replaceText(config -> config.matchLiteral("{items}").replacement(PageMgr.getPage(tempList, page)))
-                .replaceText(config -> config.matchLiteral("{listName}").replacement(coloredName))
-                .replaceText(config -> config.matchLiteral("{updateTime}").replacement(topList.getUpdateTime()))
-                .replaceText(config -> config.matchLiteral("{totalIndex}").replacement(String.valueOf(totalPage)))
-                .replaceText(config -> config.matchLiteral("{currentIndex}").replacement(String.valueOf(page)))
-                .replaceText(config -> config.matchLiteral("{prevButton}").replacement(page > 1 ? prevButton : Component.empty()))
-                .replaceText(config -> config.matchLiteral("{nextButton}").replacement(page < totalPage ? nextButton : Component.empty()))
+                    player.sendMessage(UIConfig.get(UIComponent.MAIN_UI)
+                            .replaceText(config -> config.match(Config.getPattern())
+                                    .replacement((matchResult, builder) -> {
+                                                String key = matchResult.group();
+                                                return switch (key) {
+                                                    case "{items}" -> PageMgr.getPage(tempList, page);
+                                                    case "{listName}" -> coloredName;
+                                                    case "{updateTime}" -> Component.text(topList.getUpdateTime());
+                                                    case "{totalIndex}" -> Component.text(String.valueOf(totalPage));
+                                                    case "{currentIndex}" -> Component.text(String.valueOf(page));
+                                                    case "{prevButton}" -> page > 1 ? prevButton : Component.empty();
+                                                    case "{nextButton}" -> page < totalPage ? nextButton : Component.empty();
+                                                    default -> Component.text(key);
+                                                };
+                                            }
+                                    )
+                            )
+                    );
+                }
         );
     }
 

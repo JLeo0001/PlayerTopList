@@ -2,9 +2,11 @@ package cn.JvavRE.playerTopList.config;
 
 import cn.JvavRE.playerTopList.PlayerTopList;
 
-public class Config {
-    private static PlayerTopList plugin;
+import java.util.regex.Pattern;
 
+public class Config {
+    private static final Pattern pattern = Pattern.compile("\\{\\w+}");
+    private static PlayerTopList plugin;
     private static int pageSize;
     private static int updateInterval;
 
@@ -21,7 +23,7 @@ public class Config {
         UIConfig.loadConfig(plugin.getConfig().getConfigurationSection("ui"));
         TopListLoader.loadTopLists(plugin.getConfig().getConfigurationSection("lists"));
 
-        PlayerTopList.Logger().info("配置加载完成");
+        plugin.getLogger().info("配置加载完成");
     }
 
     public static void reloadConfig() {
@@ -35,5 +37,9 @@ public class Config {
 
     public static int getUpdateInterval() {
         return updateInterval;
+    }
+
+    public static Pattern getPattern() {
+        return pattern;
     }
 }

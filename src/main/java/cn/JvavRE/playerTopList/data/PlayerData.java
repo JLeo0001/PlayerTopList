@@ -32,7 +32,7 @@ public class PlayerData {
                     try {
                         if (subArg instanceof Material material) total += player.getStatistic(type, material);
                     } catch (IllegalArgumentException e) {
-                        PlayerTopList.Logger().warning("在加载 " + type.name() + " 时出现错误的材料类型: " + subArg);
+                        PlayerTopList.getInstance().getLogger().warning("在加载 " + type.name() + " 时出现错误的材料类型: " + subArg);
                     }
                 }
             }
@@ -41,7 +41,7 @@ public class PlayerData {
                     try {
                         if (subArg instanceof EntityType entityType) total += player.getStatistic(type, entityType);
                     } catch (IllegalArgumentException e) {
-                        PlayerTopList.Logger().warning("在加载 " + type.name() + " 时出现错误的实体类型: " + subArg);
+                        PlayerTopList.getInstance().getLogger().warning("在加载 " + type.name() + " 时出现错误的实体类型: " + subArg);
                     }
                 }
             }

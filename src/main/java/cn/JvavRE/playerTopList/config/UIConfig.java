@@ -19,7 +19,7 @@ public class UIConfig {
         ConcurrentHashMap<UIComponent, Component> newMap = new ConcurrentHashMap<>();
 
         if (config == null) {
-            PlayerTopList.Logger().warning("未找到UI配置, 使用默认配置");
+            PlayerTopList.getInstance().getLogger().warning("未找到UI配置, 使用默认配置");
             for (UIComponent component : UIComponent.values()) {
                 newMap.put(component, component.getComponent());
             }
@@ -38,7 +38,7 @@ public class UIConfig {
         components.putAll(newMap);
         generateUI();
 
-        PlayerTopList.Logger().info("加载UI配置完成");
+        PlayerTopList.getInstance().getLogger().info("加载UI配置完成");
     }
 
     private static void generateUI() {

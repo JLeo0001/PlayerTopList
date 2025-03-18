@@ -33,17 +33,17 @@ public class TopListLoader {
 
     private static void addTopListToManager(String name, String nameColor, String type, List<String> materialNames, List<String> entityNames) {
         if (!isName(name)) {
-            PlayerTopList.Logger().warning("不是有效的列表名称: '" + name + "'");
+            PlayerTopList.getInstance().getLogger().warning("不是有效的列表名称: '" + name + "'");
             return;
         }
 
         if (!isStatistic(type)) {
-            PlayerTopList.Logger().warning("不是有效的统计类型: '" + type + "'");
+            PlayerTopList.getInstance().getLogger().warning("不是有效的统计类型: '" + type + "'");
             return;
         }
 
         if (!isColor(nameColor)) {
-            PlayerTopList.Logger().warning("不是有效的颜色: '" + nameColor + "'" + ", 使用默认颜色");
+            PlayerTopList.getInstance().getLogger().warning("不是有效的颜色: '" + nameColor + "'" + ", 使用默认颜色");
             nameColor = "#FFFFFF";
         }
 
@@ -57,7 +57,7 @@ public class TopListLoader {
                 List<EntityType> entities = new ArrayList<>();
 
                 if (entityNames.isEmpty()) {
-                    PlayerTopList.Logger().warning(name + " -> 实体类型列表为空, 使用默认实体");
+                    PlayerTopList.getInstance().getLogger().warning(name + " -> 实体类型列表为空, 使用默认实体");
                     entities = SubStatistic.getEntities("alive");
                 }
 
@@ -75,7 +75,7 @@ public class TopListLoader {
                     } else if (SubStatistic.isValid(entityName)) {
                         entities.addAll(SubStatistic.getEntities(entityName));
                     } else {
-                        PlayerTopList.Logger().warning(name + " -> 不是有效的实体: '" + entityName + "'");
+                        PlayerTopList.getInstance().getLogger().warning(name + " -> 不是有效的实体: '" + entityName + "'");
                     }
                 }
 
@@ -89,7 +89,7 @@ public class TopListLoader {
                 List<Material> materials = new ArrayList<>();
 
                 if (materialNames.isEmpty()) {
-                    PlayerTopList.Logger().warning(name + " -> 材料类型列表为空, 使用默认材料");
+                    PlayerTopList.getInstance().getLogger().warning(name + " -> 材料类型列表为空, 使用默认材料");
                     materials = SubStatistic.getMaterials("blocks");
                 }
 
@@ -100,7 +100,7 @@ public class TopListLoader {
                     } else if (SubStatistic.isValid(materialName)) {
                         materials.addAll(SubStatistic.getMaterials(materialName));
                     } else {
-                        PlayerTopList.Logger().warning(name + " -> 不是有效的材料: '" + materialName + "'");
+                        PlayerTopList.getInstance().getLogger().warning(name + " -> 不是有效的材料: '" + materialName + "'");
                     }
                 }
 
@@ -114,7 +114,7 @@ public class TopListLoader {
                 List<Material> materials = new ArrayList<>();
 
                 if (materialNames.isEmpty()) {
-                    PlayerTopList.Logger().warning(name + " -> 材料类型列表为空, 使用默认材料");
+                    PlayerTopList.getInstance().getLogger().warning(name + " -> 材料类型列表为空, 使用默认材料");
                     materials = SubStatistic.getMaterials("item");
                 }
 
@@ -125,7 +125,7 @@ public class TopListLoader {
                     } else if (SubStatistic.isValid(materialName)) {
                         materials.addAll(SubStatistic.getMaterials(materialName));
                     } else {
-                        PlayerTopList.Logger().warning(name + " -> 不是有效的材料: '" + materialName + "'");
+                        PlayerTopList.getInstance().getLogger().warning(name + " -> 不是有效的材料: '" + materialName + "'");
                     }
                 }
 
@@ -137,7 +137,7 @@ public class TopListLoader {
             case UNTYPED -> ListsMgr.addNewList(name, color, Statistic.valueOf(type), new ArrayList<>());
         }
 
-        PlayerTopList.Logger().info("成功添加列表: " + name + " (" + type + ")");
+        PlayerTopList.getInstance().getLogger().info("成功添加列表: " + name + " (" + type + ")");
     }
 
     protected static void loadTopLists(ConfigurationSection section) {

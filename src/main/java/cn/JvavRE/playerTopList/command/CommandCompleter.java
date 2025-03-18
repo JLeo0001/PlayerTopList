@@ -1,6 +1,5 @@
 package cn.JvavRE.playerTopList.command;
 
-import cn.JvavRE.playerTopList.PlayerTopList;
 import cn.JvavRE.playerTopList.data.ListsMgr;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -8,7 +7,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class CommandCompleter implements org.bukkit.command.TabCompleter {

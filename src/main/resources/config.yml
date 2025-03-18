@@ -1,6 +1,10 @@
+# 每一页上应该有多少玩家
 page-size: 10
+
+# 排行榜更新间隔(单位为秒)(不小于30)
 update-interval: 60
 
+# 自定义UI部分
 ui:
   header: "<aqua>================ <hover:show_text:'<yellow>更新时间: <#FFA500>{updateTime}</#FFA500></yellow>'>{listName} ================</aqua>"
   footer: "<aqua>{prevButton}当前: (<white>{currentIndex}</white>/<white>{totalIndex}</white>){nextButton}</aqua>"
@@ -8,18 +12,136 @@ ui:
   nextButton: "<hover:show_text:'下一页'><dark_aqua> -> </dark_aqua></hover>"
   item: "<gray>⬡</gray> <white>{num}. <green>{playerName} <grey>-</grey> {count}</green></white>"
 
+# 排行榜部分
 lists:
-  time:
+  #示例:
+  #这个是排行榜名称
+  挖掘榜-总榜:
+    # (可选) 这个是排行榜显示颜色
+    color: "#FFA500"
+
+    # (必填) 这个是统计数据类型, 可用类型见附录1
+    type: MINE_BLOCK
+
+    # (选择性必填) 当类型为Statistic.Type.BLOCK或者Statistic.Type.ITEM时必填
+    # 除了材料名称外可用值: all, item, block, solid
+    # 注意!!!该项为列表类型
+    material: [solid]
+
+    # (选择性必填) 当类型为Statistic.Type.ENTITY时必填
+    # 除了实体名称外可用值: all, alive
+    # 注意!!!该项为列表类型
+    entity: [all]
+
+    # (WIP) (选填) 数值表达式:
+    # 用于修正排行榜变量
+    expression: "c * 64"
+
+    # (WIP) (选填) 单位:
+    # 啊就是加载数字后面的字符..
+    unit: "组"
+
+  在线时间:
     color: "#FF0000"
     type: PLAY_ONE_MINUTE
 
-  block:
-    color: "#FFA500"
+  挖掘榜-石头:
+    color: "#EEEEEE"
     type: MINE_BLOCK
-    material: [solid]
+    material: [STONE]
 
-  entity:
+  击杀榜-生物:
     color: "#FF00FF"
     type: KILL_ENTITY
-    entity: [all]
+    entity: [alive]
 
+  击杀榜-玩家:
+    color: "#FF0022"
+    type: KILL_ENTITY
+    entity: [PLAYER]
+
+# 附录
+# 1.可用统计类型:
+#  DAMAGE_DEALT,
+#  DAMAGE_TAKEN,
+#  DEATHS,
+#  MOB_KILLS,
+#  PLAYER_KILLS,
+#  FISH_CAUGHT,
+#  ANIMALS_BRED,
+#  LEAVE_GAME,
+#  JUMP,
+#  DROP_COUNT,
+#  DROP(Statistic.Type.ITEM),
+#  PICKUP(Statistic.Type.ITEM),
+#  PLAY_ONE_MINUTE,
+#  TOTAL_WORLD_TIME,
+#  WALK_ONE_CM,
+#  WALK_ON_WATER_ONE_CM,
+#  FALL_ONE_CM,
+#  SNEAK_TIME,
+#  CLIMB_ONE_CM,
+#  FLY_ONE_CM,
+#  WALK_UNDER_WATER_ONE_CM,
+#  MINECART_ONE_CM,
+#  BOAT_ONE_CM,
+#  PIG_ONE_CM,
+#  HORSE_ONE_CM,
+#  SPRINT_ONE_CM,
+#  CROUCH_ONE_CM,
+#  AVIATE_ONE_CM,
+#  MINE_BLOCK(Statistic.Type.BLOCK),
+#  USE_ITEM(Statistic.Type.ITEM),
+#  BREAK_ITEM(Statistic.Type.ITEM),
+#  CRAFT_ITEM(Statistic.Type.ITEM),
+#  KILL_ENTITY(Statistic.Type.ENTITY),
+#  ENTITY_KILLED_BY(Statistic.Type.ENTITY),
+#  TIME_SINCE_DEATH,
+#  TALKED_TO_VILLAGER,
+#  TRADED_WITH_VILLAGER,
+#  CAKE_SLICES_EATEN,
+#  CAULDRON_FILLED,
+#  CAULDRON_USED,
+#  ARMOR_CLEANED,
+#  BANNER_CLEANED,
+#  BREWINGSTAND_INTERACTION,
+#  BEACON_INTERACTION,
+#  DROPPER_INSPECTED,
+#  HOPPER_INSPECTED,
+#  DISPENSER_INSPECTED,
+#  NOTEBLOCK_PLAYED,
+#  NOTEBLOCK_TUNED,
+#  FLOWER_POTTED,
+#  TRAPPED_CHEST_TRIGGERED,
+#  ENDERCHEST_OPENED,
+#  ITEM_ENCHANTED,
+#  RECORD_PLAYED,
+#  FURNACE_INTERACTION,
+#  CRAFTING_TABLE_INTERACTION,
+#  CHEST_OPENED,
+#  SLEEP_IN_BED,
+#  SHULKER_BOX_OPENED,
+#  TIME_SINCE_REST,
+#  SWIM_ONE_CM,
+#  DAMAGE_DEALT_ABSORBED,
+#  DAMAGE_DEALT_RESISTED,
+#  DAMAGE_BLOCKED_BY_SHIELD,
+#  DAMAGE_ABSORBED,
+#  DAMAGE_RESISTED,
+#  CLEAN_SHULKER_BOX,
+#  OPEN_BARREL,
+#  INTERACT_WITH_BLAST_FURNACE,
+#  INTERACT_WITH_SMOKER,
+#  INTERACT_WITH_LECTERN,
+#  INTERACT_WITH_CAMPFIRE,
+#  INTERACT_WITH_CARTOGRAPHY_TABLE,
+#  INTERACT_WITH_LOOM,
+#  INTERACT_WITH_STONECUTTER,
+#  BELL_RING,
+#  RAID_TRIGGER,
+#  RAID_WIN,
+#  INTERACT_WITH_ANVIL,
+#  INTERACT_WITH_GRINDSTONE,
+#  TARGET_HIT,
+#  INTERACT_WITH_SMITHING_TABLE,
+#  STRIDER_ONE_CM;

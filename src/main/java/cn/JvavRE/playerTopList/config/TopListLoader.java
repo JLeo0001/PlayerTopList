@@ -11,8 +11,12 @@ import org.bukkit.entity.EntityType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
+import java.util.logging.Logger;
 
 public class TopListLoader {
+    private static final Logger logger = PlayerTopList.getInstance().getLogger();
+    
     private static boolean isStatistic(String type) {
         try {
             Statistic.valueOf(type);
@@ -33,112 +37,73 @@ public class TopListLoader {
 
     private static void addTopListToManager(String name, String nameColor, String type, List<String> materialNames, List<String> entityNames) {
         if (!isName(name)) {
-            PlayerTopList.getInstance().getLogger().warning("不是有效的列表名称: '" + name + "'");
+            logger.warning("不是有效的列表名称: '" + name + "'");
             return;
         }
 
         if (!isStatistic(type)) {
-            PlayerTopList.getInstance().getLogger().warning("不是有效的统计类型: '" + type + "'");
+            logger.warning("不是有效的统计类型: '" + type + "'");
             return;
         }
 
         if (!isColor(nameColor)) {
-            PlayerTopList.getInstance().getLogger().warning("不是有效的颜色: '" + nameColor + "'" + ", 使用默认颜色");
+            logger.warning("不是有效的颜色: '" + nameColor + "'" + ", 使用默认颜色");
             nameColor = "#FFFFFF";
         }
 
+        logger.info("正在加载列表: " + name);
+        
         // 根据类型处理子参数列表
-        // TODO: 找到一种优化方式处理这一坨
         TextColor color = TextColor.fromHexString(nameColor);
         Statistic statistic = Statistic.valueOf(type);
         switch (statistic.getType()) {
             case ENTITY -> {
-                // 实体类型加载
-                List<EntityType> entities = new ArrayList<>();
-
-                if (entityNames.isEmpty()) {
-                    PlayerTopList.getInstance().getLogger().warning(name + " -> 实体类型列表为空, 使用默认实体");
-                    entities = SubStatistic.getEntities("alive");
-                }
-
-                for (String entityName : entityNames) {
-                    EntityType entityType;
-
-                    try {
-                        entityType = EntityType.valueOf(entityName.toUpperCase());
-                    } catch (Exception e) {
-                        entityType = null;
-                    }
-
-                    if (entityType != null) {
-                        entities.add(entityType);
-                    } else if (SubStatistic.isValid(entityName)) {
-                        entities.addAll(SubStatistic.getEntities(entityName));
-                    } else {
-                        PlayerTopList.getInstance().getLogger().warning(name + " -> 不是有效的实体: '" + entityName + "'");
-                    }
-                }
-
-                // 去重
+                List<EntityType> entities = processNames(EntityType.class, entityNames, "alive", SubStatistic::getEntities);
                 entities = entities.stream().distinct().toList();
-
                 ListsMgr.addNewList(name, color, Statistic.valueOf(type), entities);
             }
-            case BLOCK -> {
-                // 材料类型加载
-                List<Material> materials = new ArrayList<>();
-
-                if (materialNames.isEmpty()) {
-                    PlayerTopList.getInstance().getLogger().warning(name + " -> 材料类型列表为空, 使用默认材料");
-                    materials = SubStatistic.getMaterials("blocks");
-                }
-
-                for (String materialName : materialNames) {
-                    Material material = Material.matchMaterial(materialName);
-                    if (material != null) {
-                        materials.add(material);
-                    } else if (SubStatistic.isValid(materialName)) {
-                        materials.addAll(SubStatistic.getMaterials(materialName));
-                    } else {
-                        PlayerTopList.getInstance().getLogger().warning(name + " -> 不是有效的材料: '" + materialName + "'");
-                    }
-                }
-
-                // 整理列表
-                materials = materials.stream().distinct().filter(Material::isBlock).toList();
-
-                ListsMgr.addNewList(name, color, Statistic.valueOf(type), materials);
-            }
             case ITEM -> {
-                // 材料类型加载
-                List<Material> materials = new ArrayList<>();
-
-                if (materialNames.isEmpty()) {
-                    PlayerTopList.getInstance().getLogger().warning(name + " -> 材料类型列表为空, 使用默认材料");
-                    materials = SubStatistic.getMaterials("item");
-                }
-
-                for (String materialName : materialNames) {
-                    Material material = Material.matchMaterial(materialName);
-                    if (material != null) {
-                        materials.add(material);
-                    } else if (SubStatistic.isValid(materialName)) {
-                        materials.addAll(SubStatistic.getMaterials(materialName));
-                    } else {
-                        PlayerTopList.getInstance().getLogger().warning(name + " -> 不是有效的材料: '" + materialName + "'");
-                    }
-                }
-
-                // 整理列表
-                materials = materials.stream().distinct().filter(Material::isItem).toList();
-
-                ListsMgr.addNewList(name, color, Statistic.valueOf(type), materials);
+                List<Material> items = processNames(Material.class, materialNames, "items", SubStatistic::getMaterials);
+                items = items.stream().filter(Material::isItem).distinct().toList();
+                ListsMgr.addNewList(name, color, Statistic.valueOf(type), items);
+            }
+            case BLOCK -> {
+                List<Material> blocks = processNames(Material.class, materialNames, "blocks", SubStatistic::getMaterials);
+                blocks = blocks.stream().filter(Material::isBlock).distinct().toList();
+                ListsMgr.addNewList(name, color, Statistic.valueOf(type), blocks);
             }
             case UNTYPED -> ListsMgr.addNewList(name, color, Statistic.valueOf(type), new ArrayList<>());
         }
 
-        PlayerTopList.getInstance().getLogger().info("成功添加列表: " + name + " (" + type + ")");
+        logger.info("成功添加列表: " + name + " (" + type + ")");
     }
+
+    private static <T extends Enum<T>> List<T> processNames(Class<T> tClass, List<String> args, String defaultSub, Function<String, List<T>> subGetter) {
+        if (args.isEmpty()) {
+            logger.warning("参数列表为空, 使用默认列表");
+            return subGetter.apply(defaultSub);
+        }
+
+        List<T> result = new ArrayList<>();
+        for (String name : args) {
+            T obj;
+
+            try{
+                obj = Enum.valueOf(tClass, name.toUpperCase());
+            }catch (Exception e){
+                obj = null;
+            }
+
+            if (obj != null) result.add(obj);
+            else if (SubStatistic.isValid(name)) result.addAll(subGetter.apply(name));
+            else logger.warning("不是有效的参数: '" + name + "'");
+        }
+
+        return result;
+    }
+
+
+
 
     protected static void loadTopLists(ConfigurationSection section) {
         if (section == null) return;

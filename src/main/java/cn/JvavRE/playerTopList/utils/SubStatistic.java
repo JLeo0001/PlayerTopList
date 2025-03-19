@@ -17,7 +17,7 @@ public class SubStatistic {
 
     public static boolean isValid(String name) {
         return switch (name.toLowerCase()) {
-            case "solid", "blocks", "item", "alive", "all" -> true;
+            case "solid", "blocks", "items", "alive", "all" -> true;
             default -> false;
         };
     }
@@ -26,7 +26,7 @@ public class SubStatistic {
         return switch (name.toLowerCase()) {
             case "solid" -> solid;
             case "blocks" -> blocks;
-            case "item" -> items;
+            case "items" -> items;
             case "all" -> allBlocks;
             default -> new ArrayList<>();
         };

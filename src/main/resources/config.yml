@@ -24,7 +24,7 @@ lists:
     type: MINE_BLOCK
 
     # (选择性必填) 当类型为Statistic.Type.BLOCK或者Statistic.Type.ITEM时必填
-    # 除了材料名称外可用值: all, item, block, solid
+    # 除了材料名称外可用值: all, items, blocks, solid
     # 注意!!!该项为列表类型
     material: [solid]
 

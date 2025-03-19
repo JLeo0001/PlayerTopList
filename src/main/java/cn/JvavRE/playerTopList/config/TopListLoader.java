@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 
 public class TopListLoader {
     private static final Logger logger = PlayerTopList.getInstance().getLogger();
-    
+
     private static boolean isStatistic(String type) {
         try {
             Statistic.valueOf(type);
@@ -52,7 +52,7 @@ public class TopListLoader {
         }
 
         logger.info("正在加载列表: " + name);
-        
+
         // 根据类型处理子参数列表
         TextColor color = TextColor.fromHexString(nameColor);
         Statistic statistic = Statistic.valueOf(type);
@@ -88,9 +88,9 @@ public class TopListLoader {
         for (String name : args) {
             T obj;
 
-            try{
+            try {
                 obj = Enum.valueOf(tClass, name.toUpperCase());
-            }catch (Exception e){
+            } catch (Exception e) {
                 obj = null;
             }
 
@@ -101,9 +101,6 @@ public class TopListLoader {
 
         return result;
     }
-
-
-
 
     protected static void loadTopLists(ConfigurationSection section) {
         if (section == null) return;

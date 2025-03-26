@@ -27,7 +27,7 @@ public class CommandCompleter implements org.bukkit.command.TabCompleter {
     private List<String> onSubCommand(CommandSender sender, String[] args) {
         List<String> list = new ArrayList<>();
         if (sender.hasPermission("playertoplist.admin")) list.add("reload");
-        if (sender.hasPermission("playertoplist.view")) list.add("show");
+        if (sender.hasPermission("playertoplist.view")) list.add("showUI");
         return list;
     }
 

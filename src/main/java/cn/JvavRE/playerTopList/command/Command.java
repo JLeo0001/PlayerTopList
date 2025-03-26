@@ -93,6 +93,6 @@ public class Command implements CommandExecutor {
             return;
         }
 
-        topList.show(player, page);
+        topList.showUI(player, page);
     }
 }

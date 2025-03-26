@@ -2,10 +2,13 @@ package cn.JvavRE.playerTopList.config;
 
 import cn.JvavRE.playerTopList.PlayerTopList;
 
+import java.time.format.DateTimeFormatter;
 import java.util.regex.Pattern;
 
 public class Config {
     private static final Pattern pattern = Pattern.compile("\\{\\w+}");
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
     private static PlayerTopList plugin;
     private static int pageSize;
     private static int updateInterval;
@@ -41,5 +44,9 @@ public class Config {
 
     public static Pattern getPattern() {
         return pattern;
+    }
+
+    public static DateTimeFormatter getFormatter() {
+        return formatter;
     }
 }

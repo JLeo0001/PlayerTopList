@@ -35,11 +35,11 @@ lists:
 
     # (WIP) (选填) 数值表达式:
     # 用于修正排行榜变量
-    expression: "c * 64"
+    expression: "count / 64"
 
-    # (WIP) (选填) 单位:
-    # 啊就是加载数字后面的字符..
-    unit: "组"
+    # (WIP) (选填) 数字格式:
+    # java格式化字符串
+    format: "%s 组"
 
   在线时间:
     color: "#FF0000"

@@ -9,6 +9,7 @@ import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import net.objecthunter.exp4j.Expression;
 import org.bukkit.Bukkit;
 import org.bukkit.Statistic;
 import org.bukkit.entity.Player;
@@ -60,14 +61,13 @@ public class ListsMgr {
         initListsUI();
     }
 
-    public static void addNewList(String name, TextColor color, Statistic type, List<?> subArgs) {
-        TopList newList = new TopList(name, color, type, subArgs);
+    public static void addNewList(String name, TextColor color, Statistic type, List<?> subArgs, Expression expression) {
+        TopList newList = new TopList(name, color, type, subArgs, expression);
         topLists.add(newList);
 
         // 列表UI添加项目
-        listsUI.append(newList.getUI().getColoredName()
-                .decorate(TextDecoration.BOLD)
-                .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/ptl show " + name))
+        listsUI.append(newList.getColoredName()
+                .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/ptl showUI " + name))
                 .hoverEvent(HoverEvent.showText(Component.text("点击查看排行榜")))
         ).appendSpace();
     }

@@ -1,35 +1,42 @@
 package cn.JvavRE.playerTopList.data;
 
+import cn.JvavRE.playerTopList.PlayerTopList;
+import cn.JvavRE.playerTopList.config.Config;
 import cn.JvavRE.playerTopList.ui.UI;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
+import net.objecthunter.exp4j.Expression;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Statistic;
 import org.bukkit.entity.Player;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
 public class TopList {
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private final String name;
     private final Statistic type;
     private final List<?> subArgs;
     private final ArrayList<PlayerData> dataList;
+
     private final UI ui;
     private LocalDateTime lastUpdate;
 
-    public TopList(String name, TextColor nameColor, Statistic type, List<?> subArgs) {
+    private Expression expression;
+    private String fomatter;
+
+    public TopList(String name, TextColor nameColor, Statistic type, List<?> subArgs, Expression expression) {
         this.name = name;
         this.type = type;
         this.subArgs = subArgs;
         this.dataList = new ArrayList<>();
         this.lastUpdate = LocalDateTime.now();
         this.ui = new UI(this, nameColor);
+        this.expression = expression;
 
         initDataList();
         updateDataList();
@@ -70,7 +77,7 @@ public class TopList {
         dataList.sort(Comparator.comparingInt(PlayerData::getCount).reversed());
     }
 
-    public void show(Player player, int page) {
+    public void showUI(Player player, int page) {
         ui.show(player, page);
     }
 
@@ -83,10 +90,26 @@ public class TopList {
     }
 
     public String getUpdateTime() {
-        return lastUpdate.format(formatter);
+        return lastUpdate.format(Config.getFormatter());
     }
 
-    public UI getUI() {
-        return ui;
+    public Component getColoredName() {
+        return ui.getColoredName();
+    }
+
+    public String getFomattedData(PlayerData playerData) {
+        return fomatter.formatted(calc(playerData));
+    }
+
+    public Double calc(PlayerData playerData) {
+        try {
+            return expression != null ?
+                    expression.setVariable("count", playerData.getCount()).evaluate() :
+                    playerData.getCount();
+        } catch (Exception e) {
+            expression = null;
+            PlayerTopList.getInstance().getLogger().warning("表达式出现错误, 已禁用表达式");
+            return (double) playerData.getCount();
+        }
     }
 }

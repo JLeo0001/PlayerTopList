@@ -4,6 +4,8 @@ import cn.JvavRE.playerTopList.PlayerTopList;
 import cn.JvavRE.playerTopList.data.ListsMgr;
 import cn.JvavRE.playerTopList.utils.SubStatistic;
 import net.kyori.adventure.text.format.TextColor;
+import net.objecthunter.exp4j.Expression;
+import net.objecthunter.exp4j.ExpressionBuilder;
 import org.bukkit.Material;
 import org.bukkit.Statistic;
 import org.bukkit.configuration.ConfigurationSection;
@@ -16,6 +18,7 @@ import java.util.logging.Logger;
 
 public class TopListLoader {
     private static final Logger logger = PlayerTopList.getInstance().getLogger();
+
 
     private static boolean isStatistic(String type) {
         try {
@@ -30,64 +33,83 @@ public class TopListLoader {
         return name != null && !name.isEmpty();
     }
 
-    private static boolean isColor(String color) {
+    private static TextColor getColor(String color) {
         TextColor r = TextColor.fromHexString(color);
-        return r != null;
+
+        if (r != null) {
+            return r;
+        } else {
+            logger.warning("不是有效的颜色: '" + color + "'" + ", 使用默认颜色");
+            return TextColor.color(255, 255, 255);
+        }
     }
 
-    private static void addTopListToManager(String name, String nameColor, String type, List<String> materialNames, List<String> entityNames) {
+    private static Expression getExpression(String expression) {
+        try {
+            return expression.isEmpty() ?
+                    null :
+                    new ExpressionBuilder(expression).variable("count").build();
+
+        } catch (Exception e) {
+            logger.warning("表达式出现错误, 已禁用表达式");
+            return null;
+        }
+    }
+
+    private static void addTopListToManager(String name, String colorName, String type,
+                                            List<String> materialNames, List<String> entityNames,
+                                            String expressionString) {
+
         if (!isName(name)) {
             logger.warning("不是有效的列表名称: '" + name + "'");
             return;
         }
+
+        logger.info("正在加载列表: " + name);
 
         if (!isStatistic(type)) {
             logger.warning("不是有效的统计类型: '" + type + "'");
             return;
         }
 
-        if (!isColor(nameColor)) {
-            logger.warning("不是有效的颜色: '" + nameColor + "'" + ", 使用默认颜色");
-            nameColor = "#FFFFFF";
-        }
-
-        logger.info("正在加载列表: " + name);
+        // 加载属性
+        Statistic statistic = Statistic.valueOf(type);
+        TextColor color = getColor(colorName);
+        Expression exp = getExpression(expressionString);
 
         // 根据类型处理子参数列表
-        TextColor color = TextColor.fromHexString(nameColor);
-        Statistic statistic = Statistic.valueOf(type);
         switch (statistic.getType()) {
             case ENTITY -> {
-                List<EntityType> entities = processNames(EntityType.class, entityNames, "alive", SubStatistic::getEntities);
+                List<EntityType> entities = getSubArgs(EntityType.class, entityNames, "alive", SubStatistic::getEntities);
                 entities = entities.stream().distinct().toList();
-                ListsMgr.addNewList(name, color, Statistic.valueOf(type), entities);
+                ListsMgr.addNewList(name, color, Statistic.valueOf(type), entities, exp);
             }
             case ITEM -> {
-                List<Material> items = processNames(Material.class, materialNames, "items", SubStatistic::getMaterials);
+                List<Material> items = getSubArgs(Material.class, materialNames, "items", SubStatistic::getMaterials);
                 items = items.stream().filter(Material::isItem).distinct().toList();
-                ListsMgr.addNewList(name, color, Statistic.valueOf(type), items);
+                ListsMgr.addNewList(name, color, Statistic.valueOf(type), items, exp);
             }
             case BLOCK -> {
-                List<Material> blocks = processNames(Material.class, materialNames, "blocks", SubStatistic::getMaterials);
+                List<Material> blocks = getSubArgs(Material.class, materialNames, "blocks", SubStatistic::getMaterials);
                 blocks = blocks.stream().filter(Material::isBlock).distinct().toList();
-                ListsMgr.addNewList(name, color, Statistic.valueOf(type), blocks);
+                ListsMgr.addNewList(name, color, Statistic.valueOf(type), blocks, exp);
             }
-            case UNTYPED -> ListsMgr.addNewList(name, color, Statistic.valueOf(type), new ArrayList<>());
+            case UNTYPED -> ListsMgr.addNewList(name, color, Statistic.valueOf(type), new ArrayList<>(), exp);
         }
 
         logger.info("成功添加列表: " + name + " (" + type + ")");
     }
 
-    private static <T extends Enum<T>> List<T> processNames(Class<T> tClass, List<String> args, String defaultSub, Function<String, List<T>> subGetter) {
+    private static <T extends Enum<T>> List<T> getSubArgs(Class<T> tClass, List<String> args, String defaultSub, Function<String, List<T>> subGetter) {
         if (args.isEmpty()) {
             logger.warning("参数列表为空, 使用默认列表");
             return subGetter.apply(defaultSub);
         }
 
+        // 将字符串转换为材料列表
         List<T> result = new ArrayList<>();
         for (String name : args) {
             T obj;
-
             try {
                 obj = Enum.valueOf(tClass, name.toUpperCase());
             } catch (Exception e) {
@@ -113,10 +135,11 @@ public class TopListLoader {
             // 榜单参数
             String type = listSection.getString("type");
             String nameColor = listSection.getString("color", "#FFFFFF");
+            String expressionString = listSection.getString("expression", "");
             List<String> material = listSection.getStringList("material");
             List<String> entity = listSection.getStringList("entity");
 
-            addTopListToManager(name, nameColor, type, material, entity);
+            addTopListToManager(name, nameColor, type, material, entity, expressionString);
         }
     }
 }

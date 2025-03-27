@@ -58,8 +58,9 @@ public class TopListLoader {
 
     private static void addTopListToManager(String name, String colorName, String type,
                                             List<String> materialNames, List<String> entityNames,
-                                            String expressionString) {
+                                            String expressionString, String formater) {
 
+        // 检查名称
         if (!isName(name)) {
             logger.warning("不是有效的列表名称: '" + name + "'");
             return;
@@ -67,6 +68,7 @@ public class TopListLoader {
 
         logger.info("正在加载列表: " + name);
 
+        // 检查类型
         if (!isStatistic(type)) {
             logger.warning("不是有效的统计类型: '" + type + "'");
             return;
@@ -82,19 +84,19 @@ public class TopListLoader {
             case ENTITY -> {
                 List<EntityType> entities = getSubArgs(EntityType.class, entityNames, "alive", SubStatistic::getEntities);
                 entities = entities.stream().distinct().toList();
-                ListsMgr.addNewList(name, color, Statistic.valueOf(type), entities, exp);
+                ListsMgr.addNewList(name, color, Statistic.valueOf(type), entities, exp, formater);
             }
             case ITEM -> {
                 List<Material> items = getSubArgs(Material.class, materialNames, "items", SubStatistic::getMaterials);
                 items = items.stream().filter(Material::isItem).distinct().toList();
-                ListsMgr.addNewList(name, color, Statistic.valueOf(type), items, exp);
+                ListsMgr.addNewList(name, color, Statistic.valueOf(type), items, exp, formater);
             }
             case BLOCK -> {
                 List<Material> blocks = getSubArgs(Material.class, materialNames, "blocks", SubStatistic::getMaterials);
                 blocks = blocks.stream().filter(Material::isBlock).distinct().toList();
-                ListsMgr.addNewList(name, color, Statistic.valueOf(type), blocks, exp);
+                ListsMgr.addNewList(name, color, Statistic.valueOf(type), blocks, exp, formater);
             }
-            case UNTYPED -> ListsMgr.addNewList(name, color, Statistic.valueOf(type), new ArrayList<>(), exp);
+            case UNTYPED -> ListsMgr.addNewList(name, color, Statistic.valueOf(type), new ArrayList<>(), exp, formater);
         }
 
         logger.info("成功添加列表: " + name + " (" + type + ")");
@@ -136,10 +138,11 @@ public class TopListLoader {
             String type = listSection.getString("type");
             String nameColor = listSection.getString("color", "#FFFFFF");
             String expressionString = listSection.getString("expression", "");
+            String formatter = listSection.getString("formatter", "%.0f");
             List<String> material = listSection.getStringList("material");
             List<String> entity = listSection.getStringList("entity");
 
-            addTopListToManager(name, nameColor, type, material, entity, expressionString);
+            addTopListToManager(name, nameColor, type, material, entity, expressionString, formatter);
         }
     }
 }

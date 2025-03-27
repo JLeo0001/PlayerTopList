@@ -61,13 +61,15 @@ public class ListsMgr {
         initListsUI();
     }
 
-    public static void addNewList(String name, TextColor color, Statistic type, List<?> subArgs, Expression expression) {
-        TopList newList = new TopList(name, color, type, subArgs, expression);
+    public static void addNewList(String name, TextColor color, Statistic type, List<?> subArgs,
+                                  Expression expression, String formatter) {
+
+        TopList newList = new TopList(name, color, type, subArgs, expression, formatter);
         topLists.add(newList);
 
         // 列表UI添加项目
         listsUI.append(newList.getColoredName()
-                .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/ptl showUI " + name))
+                .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/ptl show " + name))
                 .hoverEvent(HoverEvent.showText(Component.text("点击查看排行榜")))
         ).appendSpace();
     }

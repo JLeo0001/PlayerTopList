@@ -12,10 +12,7 @@ import org.bukkit.Statistic;
 import org.bukkit.entity.Player;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 public class TopList {
     private final String name;
@@ -27,16 +24,21 @@ public class TopList {
     private LocalDateTime lastUpdate;
 
     private Expression expression;
-    private String fomatter;
+    private String formatter;
 
-    public TopList(String name, TextColor nameColor, Statistic type, List<?> subArgs, Expression expression) {
+    public TopList(String name, TextColor nameColor, Statistic type, List<?> subArgs,
+                   Expression expression, String formatter) {
+
         this.name = name;
         this.type = type;
         this.subArgs = subArgs;
         this.dataList = new ArrayList<>();
+
         this.lastUpdate = LocalDateTime.now();
         this.ui = new UI(this, nameColor);
+
         this.expression = expression;
+        this.formatter = formatter;
 
         initDataList();
         updateDataList();
@@ -97,8 +99,14 @@ public class TopList {
         return ui.getColoredName();
     }
 
-    public String getFomattedData(PlayerData playerData) {
-        return fomatter.formatted(calc(playerData));
+    public String getFormattedData(PlayerData playerData) {
+        try {
+            return formatter.formatted(calc(playerData));
+        } catch (IllegalFormatConversionException e) {
+            formatter = "%.0f";
+            PlayerTopList.getInstance().getLogger().warning("格式化字符串出现错误, 已重置为%.0f");
+            return formatter.formatted(calc(playerData));
+        }
     }
 
     public Double calc(PlayerData playerData) {

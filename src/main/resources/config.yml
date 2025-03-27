@@ -33,13 +33,13 @@ lists:
     # 注意!!!该项为列表类型
     entity: [all]
 
-    # (WIP) (选填) 数值表达式:
-    # 用于修正排行榜变量
+    # (选填) 数值表达式:
+    # 用于修正排行榜数值
     expression: "count / 64"
 
     # (WIP) (选填) 数字格式:
     # java格式化字符串
-    format: "%s 组"
+    format: "%.1f 组"
 
   在线时间:
     color: "#FF0000"

@@ -68,4 +68,3 @@ lists:
 # 1.可用统计类型见: https://bukkit.windit.net/javadoc/org/bukkit/Statistic.html
 # 2.可用材料类型见: https://bukkit.windit.net/javadoc/org/bukkit/Material.html
 # 3.可用实体类型见: https://bukkit.windit.net/javadoc/org/bukkit/entity/EntityType.html
-#

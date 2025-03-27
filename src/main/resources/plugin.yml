@@ -1,5 +1,5 @@
 name: PlayerTopList
-version: '1.0-SNAPSHOT'
+version: '1.0'
 main: cn.JvavRE.playerTopList.PlayerTopList
 api-version: '1.21'
 author: Jvav_Runtime_Environment

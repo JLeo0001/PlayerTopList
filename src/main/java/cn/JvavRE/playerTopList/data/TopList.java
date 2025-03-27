@@ -109,11 +109,12 @@ public class TopList {
         }
     }
 
-    public Double calc(PlayerData playerData) {
+    private Double calc(PlayerData playerData) {
         try {
-            return expression != null ?
-                    expression.setVariable("count", playerData.getCount()).evaluate() :
-                    playerData.getCount();
+            return expression == null ?
+                    playerData.getCount() :
+                    expression.setVariable("count", playerData.getCount()).evaluate();
+
         } catch (Exception e) {
             expression = null;
             PlayerTopList.getInstance().getLogger().warning("表达式出现错误, 已禁用表达式");

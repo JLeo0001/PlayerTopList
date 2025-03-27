@@ -15,11 +15,12 @@ public class Config {
 
     public static void init(PlayerTopList plugin) {
         Config.plugin = plugin;
-        plugin.saveDefaultConfig();
         loadConfig();
     }
 
     private static void loadConfig() {
+        plugin.saveDefaultConfig();
+
         pageSize = plugin.getConfig().getInt("page-size", 10);
         updateInterval = plugin.getConfig().getInt("update-interval", 60);
 

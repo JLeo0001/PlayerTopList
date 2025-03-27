@@ -34,10 +34,10 @@ public class TopListLoader {
     }
 
     private static TextColor getColor(String color) {
-        TextColor r = TextColor.fromHexString(color);
+        TextColor rColor = TextColor.fromHexString(color);
 
-        if (r != null) {
-            return r;
+        if (rColor != null) {
+            return rColor;
         } else {
             logger.warning("不是有效的颜色: '" + color + "'" + ", 使用默认颜色");
             return TextColor.color(255, 255, 255);

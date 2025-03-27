@@ -8,8 +8,8 @@ update-interval: 60
 ui:
   header: "<aqua>================ <hover:show_text:'<yellow>更新时间: <#FFA500>{updateTime}</#FFA500></yellow>'>{listName} ================</aqua>"
   footer: "<aqua>{prevButton}当前: (<white>{currentIndex}</white>/<white>{totalIndex}</white>){nextButton}</aqua>"
-  prevButton: "<hover:show_text:'上一页'><dark_aqua> <- </dark_aqua></hover>"
-  nextButton: "<hover:show_text:'下一页'><dark_aqua> -> </dark_aqua></hover>"
+  prev-button: "<hover:show_text:'上一页'><dark_aqua> <- </dark_aqua></hover>"
+  next-button: "<hover:show_text:'下一页'><dark_aqua> -> </dark_aqua></hover>"
   item: "<gray>⬡</gray> <white>{num}. <green>{playerName} <grey>-</grey> {count}</green></white>"
 
 # 排行榜部分

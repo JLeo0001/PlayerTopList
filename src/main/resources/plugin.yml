@@ -2,8 +2,9 @@ name: PlayerTopList
 version: '1.0'
 main: cn.JvavRE.playerTopList.PlayerTopList
 api-version: '1.21'
+folia-supported: true
 author: Jvav_Runtime_Environment
-description: 同步聊天插件
+description: 排行榜插件
 
 commands:
   playertoplist:

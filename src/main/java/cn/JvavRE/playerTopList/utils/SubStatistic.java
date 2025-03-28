@@ -12,6 +12,7 @@ public class SubStatistic {
     private static final List<Material> blocks = Arrays.stream(Material.values()).filter(Material::isBlock).toList();
     private static final List<Material> items = Arrays.stream(Material.values()).filter(Material::isItem).toList();
     private static final List<Material> allBlocks = List.of(Material.values());
+
     private static final List<EntityType> alive = Arrays.stream(EntityType.values()).filter(EntityType::isAlive).toList();
     private static final List<EntityType> allEntities = Arrays.stream(EntityType.values()).filter(entityType -> !entityType.equals(EntityType.UNKNOWN)).toList();
 

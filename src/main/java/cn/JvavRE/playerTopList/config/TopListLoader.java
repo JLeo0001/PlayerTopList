@@ -3,9 +3,11 @@ package cn.JvavRE.playerTopList.config;
 import cn.JvavRE.playerTopList.PlayerTopList;
 import cn.JvavRE.playerTopList.data.ListsMgr;
 import cn.JvavRE.playerTopList.utils.SubStatistic;
+import cn.JvavRE.playerTopList.utils.TagStatistic;
 import net.kyori.adventure.text.format.TextColor;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
+import org.bukkit.Keyed;
 import org.bukkit.Material;
 import org.bukkit.Statistic;
 import org.bukkit.configuration.ConfigurationSection;
@@ -82,17 +84,38 @@ public class TopListLoader {
         // 根据类型处理子参数列表
         switch (statistic.getType()) {
             case ENTITY -> {
-                List<EntityType> entities = getSubArgs(EntityType.class, entityNames, "alive", SubStatistic::getEntities);
+                List<EntityType> entities = getSubArgs(
+                        EntityType.class,
+                        entityNames,
+                        "alive",
+                        SubStatistic::getEntities,
+                        TagStatistic::getEntitiesFromTag
+                );
+
                 entities = entities.stream().distinct().toList();
                 ListsMgr.addNewList(name, color, Statistic.valueOf(type), entities, exp, formater);
             }
             case ITEM -> {
-                List<Material> items = getSubArgs(Material.class, materialNames, "items", SubStatistic::getMaterials);
+                List<Material> items = getSubArgs(
+                        Material.class,
+                        materialNames,
+                        "items",
+                        SubStatistic::getMaterials,
+                        TagStatistic::getItemsFromTag
+                );
+
                 items = items.stream().filter(Material::isItem).distinct().toList();
                 ListsMgr.addNewList(name, color, Statistic.valueOf(type), items, exp, formater);
             }
             case BLOCK -> {
-                List<Material> blocks = getSubArgs(Material.class, materialNames, "blocks", SubStatistic::getMaterials);
+                List<Material> blocks = getSubArgs(
+                        Material.class,
+                        materialNames,
+                        "blocks",
+                        SubStatistic::getMaterials,
+                        TagStatistic::getBlocksFromTag
+                );
+
                 blocks = blocks.stream().filter(Material::isBlock).distinct().toList();
                 ListsMgr.addNewList(name, color, Statistic.valueOf(type), blocks, exp, formater);
             }
@@ -102,7 +125,9 @@ public class TopListLoader {
         logger.info("成功添加列表: " + name + " (" + type + ")");
     }
 
-    private static <T extends Enum<T>> List<T> getSubArgs(Class<T> tClass, List<String> args, String defaultSub, Function<String, List<T>> subGetter) {
+    private static <T extends Enum<T> & Keyed> List<T> getSubArgs(Class<T> tClass, List<String> args, String defaultSub,
+                                                                  Function<String, List<T>> subGetter, Function<String, List<T>> tagGetter) {
+
         if (args.isEmpty()) {
             logger.warning("参数列表为空, 使用默认列表");
             return subGetter.apply(defaultSub);
@@ -120,6 +145,7 @@ public class TopListLoader {
 
             if (obj != null) result.add(obj);
             else if (SubStatistic.isValid(name)) result.addAll(subGetter.apply(name));
+            else if (TagStatistic.isValid(tClass, name)) result.addAll(tagGetter.apply(name));
             else logger.warning("不是有效的参数: '" + name + "'");
         }
 

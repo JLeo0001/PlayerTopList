@@ -1,6 +1,6 @@
 # [PTL] 基于统计数据的排行榜插件
 
-## 需求
+## 服务端版本
  - bukkit, spigot, paper, purpur等服务端核心(folia待测试)
  - 理论上支持1.13+, 目前仅详细测试了1.21, 如有兼容问题可issue提出
 
@@ -9,6 +9,7 @@
  - 可以自定义排行榜ui
  - 支持使用表达式更改排行榜数据
  - 支持格式化显示数据
+ - 支持使用标签
 
 ## 命令
  - ```/ptl reload``` 重载配置
@@ -16,6 +17,20 @@
 
 ## 配置文件
 ```yaml
+# 每一页上应该有多少玩家
+page-size: 10
+
+# 排行榜更新间隔(单位为秒)(不小于30)
+update-interval: 60
+
+# 自定义UI部分
+ui:
+  header: "<bold>================ <hover:show_text:'<yellow>更新时间: <#FFA500>{updateTime}</#FFA500></yellow>'>{listName} ================</bold>"
+  footer: "<aqua>{prevButton}当前: (<white>{currentIndex}</white>/<white>{totalIndex}</white>){nextButton}</aqua>"
+  prev-button: "<hover:show_text:'上一页'><dark_aqua> <- </dark_aqua></hover>"
+  next-button: "<hover:show_text:'下一页'><dark_aqua> -> </dark_aqua></hover>"
+  item: "<gray>⬡</gray> <white>{num}. <green>{playerName}</green> <grey>-</grey> <dark_green>{count}</dark_green></white>"
+
 # 排行榜部分
 lists:
   #示例:
@@ -29,13 +44,15 @@ lists:
 
     # (选择性必填) 当类型为Statistic.Type.BLOCK或者Statistic.Type.ITEM时必填
     # 除了材料名称外可用值: all, items, blocks, solid
-    # 可用值见附录2
+    # 支持使用标签, 见附录4
+    # 其他可用值见附录2
     # 注意!!!该项为列表类型
     material: [solid]
 
     # (选择性必填) 当类型为Statistic.Type.ENTITY时必填
     # 除了实体名称外可用值: all, alive
-    # 可用值见附录3
+    # 支持使用标签, 见附录4
+    # 其他可用值见附录3
     # 注意!!!该项为列表类型
     entity: [all]
 
@@ -43,12 +60,12 @@ lists:
     # 用于修正排行榜数值
     expression: "count / 64"
 
-    # (WIP) (选填) 数字格式:
+    # (选填) 数字格式:
     # java格式化字符串
     formatter: "%.1f 组"
 
   在线时间:
-    color: "#FF0000"
+    color: "#FF00FF"
     type: PLAY_ONE_MINUTE
     expression: "count / 20 / 60 / 60"
     formatter: "%.1f 小时"
@@ -58,7 +75,7 @@ lists:
     type: MINE_BLOCK
     material: [STONE]
 
-  击杀榜-生物:
+  击杀榜-总榜:
     color: "#FF00FF"
     type: KILL_ENTITY
     entity: [alive]
@@ -68,12 +85,18 @@ lists:
     type: KILL_ENTITY
     entity: [PLAYER]
 
+  击杀榜-亡灵:
+    color: "#009900"
+    type: KILL_ENTITY
+    entity: [undead]
+
 # 附录
 # 1.可用统计类型见: https://bukkit.windit.net/javadoc/org/bukkit/Statistic.html
 # 2.可用材料类型见: https://bukkit.windit.net/javadoc/org/bukkit/Material.html
 # 3.可用实体类型见: https://bukkit.windit.net/javadoc/org/bukkit/entity/EntityType.html
+# 4.可用标签及对应材料见: https://zh.minecraft.wiki/w/%E6%A0%87%E7%AD%BE?variant=zh-cn#%E6%A0%87%E7%AD%BE%E5%88%97%E8%A1%A8```
 ```
 
 ## TODO
  - [ ] 添加对placeholder的支持
- - [ ] 添加对内置标签分组的支持
+ - [x] 添加对内置标签分组的支持

@@ -1,7 +1,7 @@
 # [PTL] 基于统计数据的排行榜插件
 
 ## 服务端版本
- - bukkit, spigot, paper, purpur等服务端核心(folia待测试)
+ - paper, purpur, folia等服务端核心
  - 理论上支持1.13+, 目前仅详细测试了1.21, 如有兼容问题可issue提出
 
 ## 功能
@@ -98,5 +98,6 @@ lists:
 ```
 
 ## TODO
+ - [ ] 优化启动时某些配置加载极慢的问题
  - [ ] 添加对placeholder的支持
  - [x] 添加对内置标签分组的支持

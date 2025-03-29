@@ -51,14 +51,14 @@ public class ListsMgr {
         listsUI.append(Component.text("==================").decorate(TextDecoration.BOLD)).appendNewline();
     }
 
-    public static void stopTask() {
-        updateTask.cancel();
-    }
-
-    public static void stop() {
+    public static void reset() {
         stopTask();
         topLists.clear();
         initListsUI();
+    }
+
+    public static void stopTask() {
+        updateTask.cancel();
     }
 
     public static void addNewList(String name, TextColor color, Statistic type, List<?> subArgs,

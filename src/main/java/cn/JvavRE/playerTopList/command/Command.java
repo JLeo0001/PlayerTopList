@@ -49,7 +49,7 @@ public class Command implements CommandExecutor {
         Bukkit.getAsyncScheduler().runNow(plugin, task -> {
             sender.sendMessage("正在重新加载配置...");
 
-            ListsMgr.stop();
+            ListsMgr.reset();
             Config.reloadConfig();
             ListsMgr.startTask();
 

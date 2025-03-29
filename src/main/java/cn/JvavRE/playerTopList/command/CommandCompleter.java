@@ -40,8 +40,6 @@ public class CommandCompleter implements org.bukkit.command.TabCompleter {
     }
 
     private List<String> onReload(CommandSender sender, String[] args) {
-        if (!sender.hasPermission("playertoplist.admin")) return List.of();
-
-        return List.of("reload");
+        return List.of();
     }
 }

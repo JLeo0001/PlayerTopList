@@ -47,7 +47,7 @@ public class Command implements CommandExecutor {
 
         // 耗时太长, 改成异步加载
         Bukkit.getAsyncScheduler().runNow(plugin, task -> {
-            sender.sendMessage("正在重载...");
+            sender.sendMessage("正在重新加载配置...");
 
             ListsMgr.stop();
             Config.reloadConfig();

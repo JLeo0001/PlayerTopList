@@ -4,8 +4,8 @@ import cn.JvavRE.playerTopList.PlayerTopList;
 import cn.JvavRE.playerTopList.config.Config;
 import cn.JvavRE.playerTopList.config.UIComponent;
 import cn.JvavRE.playerTopList.config.UIConfig;
-import cn.JvavRE.playerTopList.data.PlayerData;
-import cn.JvavRE.playerTopList.data.TopList;
+import cn.JvavRE.playerTopList.data.playerData.AbstractPlayerData;
+import cn.JvavRE.playerTopList.data.topList.AbstractTopList;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.TextColor;
@@ -16,11 +16,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UI {
-    private final TopList topList;
+    private final AbstractTopList topList;
     private final Component coloredName;
     private final List<Component> tempList = new ArrayList<>();
 
-    public UI(TopList topList, TextColor color) {
+    public UI(AbstractTopList topList, TextColor color) {
         this.topList = topList;
         this.coloredName = getColoredName(color);
 
@@ -34,7 +34,7 @@ public class UI {
     public void update() {
         tempList.clear();
         for (int i = 0; i < topList.getDataList().size(); i++) {
-            PlayerData playerData = topList.getDataList().get(i);
+            AbstractPlayerData playerData = topList.getDataList().get(i);
             String playerName = playerData.getPlayer().getName() != null ? playerData.getPlayer().getName() : "null";
 
             int num = i + 1;

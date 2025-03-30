@@ -14,13 +14,15 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 public class TopListLoader {
     private static final Logger logger = PlayerTopList.getInstance().getLogger();
-
 
     private static boolean isStatistic(String type) {
         try {
@@ -82,59 +84,48 @@ public class TopListLoader {
         Expression exp = getExpression(expressionString);
 
         // 根据类型处理子参数列表
-        switch (statistic.getType()) {
-            case ENTITY -> {
-                List<EntityType> entities = getSubArgs(
-                        EntityType.class,
-                        entityNames,
-                        "alive",
-                        SubStatistic::getEntities,
-                        TagStatistic::getEntitiesFromTag
-                );
+        List<?> subArgs = switch (statistic.getType()) {
+            case ENTITY -> getSubArgStream(
+                    EntityType.class,
+                    entityNames,
+                    "alive",
+                    SubStatistic::getEntities,
+                    TagStatistic::getEntitiesFromTag
+            ).toList();
 
-                entities = entities.stream().distinct().toList();
-                ListsMgr.addNewList(name, color, Statistic.valueOf(type), entities, exp, formater);
-            }
-            case ITEM -> {
-                List<Material> items = getSubArgs(
-                        Material.class,
-                        materialNames,
-                        "items",
-                        SubStatistic::getMaterials,
-                        TagStatistic::getItemsFromTag
-                );
+            case ITEM -> getSubArgStream(
+                    Material.class,
+                    materialNames,
+                    "items",
+                    SubStatistic::getMaterials,
+                    TagStatistic::getItemsFromTag
+            ).filter(Material::isItem).toList();
 
-                items = items.stream().filter(Material::isItem).distinct().toList();
-                ListsMgr.addNewList(name, color, Statistic.valueOf(type), items, exp, formater);
-            }
-            case BLOCK -> {
-                List<Material> blocks = getSubArgs(
-                        Material.class,
-                        materialNames,
-                        "blocks",
-                        SubStatistic::getMaterials,
-                        TagStatistic::getBlocksFromTag
-                );
+            case BLOCK -> getSubArgStream(
+                    Material.class,
+                    materialNames,
+                    "blocks",
+                    SubStatistic::getMaterials,
+                    TagStatistic::getBlocksFromTag
+            ).filter(Material::isBlock).toList();
 
-                blocks = blocks.stream().filter(Material::isBlock).distinct().toList();
-                ListsMgr.addNewList(name, color, Statistic.valueOf(type), blocks, exp, formater);
-            }
-            case UNTYPED -> ListsMgr.addNewList(name, color, Statistic.valueOf(type), new ArrayList<>(), exp, formater);
-        }
+            default -> new ArrayList<Material>();
+        };
 
+        ListsMgr.addStatisticList(name, color, statistic, subArgs, exp, formater);
         logger.info("成功添加列表: " + name + " (" + type + ")");
     }
 
-    private static <T extends Enum<T> & Keyed> List<T> getSubArgs(Class<T> tClass, List<String> args, String defaultSub,
-                                                                  Function<String, List<T>> subGetter, Function<String, List<T>> tagGetter) {
+    private static <T extends Enum<T> & Keyed> Stream<T> getSubArgStream(Class<T> tClass, List<String> args, String defaultSub,
+                                                                         Function<String, List<T>> subGetter, Function<String, List<T>> tagGetter) {
 
         if (args.isEmpty()) {
             logger.warning("参数列表为空, 使用默认列表");
-            return subGetter.apply(defaultSub);
+            return subGetter.apply(defaultSub).stream();
         }
 
         // 将字符串转换为材料列表
-        List<T> result = new ArrayList<>();
+        Set<T> result = new HashSet<>();
         for (String name : args) {
             T obj;
             try {
@@ -149,7 +140,7 @@ public class TopListLoader {
             else logger.warning("不是有效的参数: '" + name + "'");
         }
 
-        return result;
+        return result.stream();
     }
 
     protected static void loadTopLists(ConfigurationSection section) {

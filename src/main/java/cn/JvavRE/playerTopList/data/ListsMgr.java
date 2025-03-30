@@ -2,6 +2,8 @@ package cn.JvavRE.playerTopList.data;
 
 import cn.JvavRE.playerTopList.PlayerTopList;
 import cn.JvavRE.playerTopList.config.Config;
+import cn.JvavRE.playerTopList.data.topList.AbstractTopList;
+import cn.JvavRE.playerTopList.data.topList.StatisticTopList;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
@@ -21,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 public class ListsMgr {
     private static TextComponent.Builder listsUI;
     private static PlayerTopList plugin;
-    private static ArrayList<TopList> topLists;
+    private static List<AbstractTopList> topLists;
     private static ScheduledTask updateTask;
 
     public static void init(PlayerTopList plugin) {
@@ -36,7 +38,7 @@ public class ListsMgr {
         updateTask = Bukkit.getAsyncScheduler().runAtFixedRate(
                 plugin,
                 task -> {
-                    topLists.forEach(TopList::updateDataList);
+                    topLists.forEach(AbstractTopList::updateDataList);
                     plugin.getLogger().info("排行榜已更新");
                 },
                 1,
@@ -61,10 +63,10 @@ public class ListsMgr {
         updateTask.cancel();
     }
 
-    public static void addNewList(String name, TextColor color, Statistic type, List<?> subArgs,
-                                  Expression expression, String formatter) {
+    public static void addStatisticList(String name, TextColor color, Statistic type, List<?> subArgs,
+                                        Expression expression, String formatter) {
 
-        TopList newList = new TopList(name, color, type, subArgs, expression, formatter);
+        StatisticTopList newList = new StatisticTopList(name, color, type, subArgs, expression, formatter);
         topLists.add(newList);
 
         // 列表UI添加项目
@@ -75,14 +77,14 @@ public class ListsMgr {
     }
 
     public static List<String> getListsName() {
-        return topLists.stream().map(TopList::getName).toList();
+        return topLists.stream().map(AbstractTopList::getName).toList();
     }
 
     public static void showLists(Player player) {
         player.sendMessage(listsUI.build());
     }
 
-    public static TopList getListByName(String name) {
+    public static AbstractTopList getListByName(String name) {
         return topLists.stream().filter(topList -> topList.getName().equals(name)).findFirst().orElse(null);
     }
 }

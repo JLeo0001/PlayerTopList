@@ -3,7 +3,7 @@ package cn.JvavRE.playerTopList.command;
 import cn.JvavRE.playerTopList.PlayerTopList;
 import cn.JvavRE.playerTopList.config.Config;
 import cn.JvavRE.playerTopList.data.ListsMgr;
-import cn.JvavRE.playerTopList.data.TopList;
+import cn.JvavRE.playerTopList.data.topList.AbstractTopList;
 import cn.JvavRE.playerTopList.utils.Digit;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
@@ -87,7 +87,7 @@ public class Command implements CommandExecutor {
         }
 
         int page = Integer.parseInt(pageStr);
-        TopList topList = ListsMgr.getListByName(name);
+        AbstractTopList topList = ListsMgr.getListByName(name);
         if (topList == null) {
             player.sendMessage("未找到列表");
             return;

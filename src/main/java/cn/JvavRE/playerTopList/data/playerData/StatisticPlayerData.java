@@ -1,4 +1,4 @@
-package cn.JvavRE.playerTopList.data;
+package cn.JvavRE.playerTopList.data.playerData;
 
 import cn.JvavRE.playerTopList.PlayerTopList;
 import org.bukkit.Material;
@@ -8,17 +8,13 @@ import org.bukkit.entity.EntityType;
 
 import java.util.List;
 
-public class PlayerData {
-    private final OfflinePlayer player;
-    private int count;
-
-    public PlayerData(OfflinePlayer player, int count) {
-        this.player = player;
-        this.count = count;
+public class StatisticPlayerData extends AbstractPlayerData {
+    public StatisticPlayerData(OfflinePlayer player, int count) {
+        super(player, count);
     }
 
-    public static PlayerData of(OfflinePlayer player) {
-        return new PlayerData(player, 0);
+    public static StatisticPlayerData of(OfflinePlayer player) {
+        return new StatisticPlayerData(player, 0);
     }
 
     public void updateCount(Statistic type, List<?> subArgs) {
@@ -48,13 +44,5 @@ public class PlayerData {
         }
 
         this.count = total;
-    }
-
-    public int getCount() {
-        return count;
-    }
-
-    public OfflinePlayer getPlayer() {
-        return player;
     }
 }

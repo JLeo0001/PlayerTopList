@@ -16,7 +16,7 @@ ui:
 lists:
   #示例:
   #这个是排行榜名称
-  挖掘榜-总榜:
+  挖掘总榜:
     # (可选) 这个是排行榜显示颜色
     color: "#FFA500"
 
@@ -45,31 +45,49 @@ lists:
     # java格式化字符串
     formatter: "%.1f 组"
 
+  挖矿榜:
+    color: "#FFD700"
+    type: MINE_BLOCK
+    material: [ coal_ores, copper_ores, diamond_ores, emerald_ores, gold_ores, lapis_ores, redstone_ores, NETHER_QUARTZ_ORE, ANCIENT_DEBRIS ]
+    expression: "count / 64"
+    formatter: "%.1f 组"
+
+  击杀总榜:
+    color: "#FF00FF"
+    type: MOB_KILLS
+
+  击杀玩家榜:
+    color: "#FF0022"
+    type: PLAYER_KILLS
+
+  死亡榜:
+    color: "#8B0000"
+    type: DEATHS
+
+  钓鱼榜:
+    color: "#0000FF"
+    type: FISH_CAUGHT
+
+  附魔榜:
+    color: "#ADD8E6"
+    type: ITEM_ENCHANTED
+
+  合成榜:
+    color: "#FFA500"
+    type: CRAFT_ITEM
+    material: [ all ]
+    expression: "count / 64"
+    formatter: "%.1f 组"
+
+  交易榜:
+    color: "#31FFB1"
+    type: TRADED_WITH_VILLAGER
+
   在线时间:
     color: "#FF00FF"
     type: PLAY_ONE_MINUTE
     expression: "count / 20 / 60 / 60"
     formatter: "%.1f 小时"
-
-  挖掘榜-石头:
-    color: "#EEEEEE"
-    type: MINE_BLOCK
-    material: [STONE]
-
-  击杀榜-总榜:
-    color: "#FF00FF"
-    type: KILL_ENTITY
-    entity: [alive]
-
-  击杀榜-玩家:
-    color: "#FF0022"
-    type: KILL_ENTITY
-    entity: [PLAYER]
-
-  击杀榜-亡灵:
-    color: "#009900"
-    type: KILL_ENTITY
-    entity: [undead]
 
 # 附录
 # 1.可用统计类型见: https://bukkit.windit.net/javadoc/org/bukkit/Statistic.html

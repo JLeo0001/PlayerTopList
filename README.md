@@ -15,6 +15,10 @@
  - ```/ptl reload``` 重载配置
  - ```/ptl show <名称>``` 打开指定的排行榜(all展示所有)
 
+## 权限
+ - ```playertoplist.admin``` 控制能否使用```reload```命令
+ - ```playertoplist.view``` 控制能否使用```view```命令
+
 ## 配置文件
 ```yaml
 # 每一页上应该有多少玩家

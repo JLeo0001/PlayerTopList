@@ -14,11 +14,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 
 public class Command implements CommandExecutor {
-    private final PlayerTopList plugin;
+    private final PlayerTopList plugin = PlayerTopList.getInstance();
 
-    public Command(PlayerTopList plugin) {
-        this.plugin = plugin;
-
+    public Command() {
         // 注册命令执行
         Objects.requireNonNull(plugin.getCommand("ptl")).setExecutor(this);
         Objects.requireNonNull(plugin.getCommand("ptl")).setTabCompleter(new CommandCompleter());

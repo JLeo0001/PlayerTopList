@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 public abstract class AbstractTopList {
     protected final String name;
@@ -57,6 +58,17 @@ public abstract class AbstractTopList {
 
     public void showUI(Player player, int page) {
         ui.show(player, page);
+    }
+
+    public AbstractPlayerData getDataByPlayer(OfflinePlayer player) {
+        return dataList.stream().filter(playerData -> Objects.equals(playerData.getPlayer().getName(), player.getName())).findFirst().orElse(null);
+    }
+
+    public int getPlayerRank(OfflinePlayer player) {
+        AbstractPlayerData playerData = getDataByPlayer(player);
+
+        if (playerData == null) return -1;
+        else return dataList.indexOf(getDataByPlayer(player)) + 1;
     }
 
     public List<AbstractPlayerData> getDataList() {

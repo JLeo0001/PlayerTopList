@@ -3,17 +3,13 @@ package cn.JvavRE.playerTopList.data;
 import cn.JvavRE.playerTopList.PlayerTopList;
 import cn.JvavRE.playerTopList.config.Config;
 import cn.JvavRE.playerTopList.data.topList.AbstractTopList;
-import cn.JvavRE.playerTopList.data.topList.StatisticTopList;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
-import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-import net.objecthunter.exp4j.Expression;
 import org.bukkit.Bukkit;
-import org.bukkit.Statistic;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -21,16 +17,21 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class ListsMgr {
+    private static final PlayerTopList plugin = PlayerTopList.getInstance();
     private static TextComponent.Builder listsUI;
-    private static PlayerTopList plugin;
     private static List<AbstractTopList> topLists;
     private static ScheduledTask updateTask;
 
-    public static void init(PlayerTopList plugin) {
-        ListsMgr.plugin = plugin;
+    public static void init() {
         topLists = new ArrayList<>();
 
         initListsUI();
+    }
+
+    private static void initListsUI() {
+        // 初始化列表UI
+        listsUI = Component.text();
+        listsUI.append(Component.text("==================").decorate(TextDecoration.BOLD)).appendNewline();
     }
 
     public static void startTask() {
@@ -47,12 +48,6 @@ public class ListsMgr {
         );
     }
 
-    private static void initListsUI() {
-        // 初始化列表UI
-        listsUI = Component.text();
-        listsUI.append(Component.text("==================").decorate(TextDecoration.BOLD)).appendNewline();
-    }
-
     public static void reset() {
         stopTask();
         topLists.clear();
@@ -63,25 +58,22 @@ public class ListsMgr {
         updateTask.cancel();
     }
 
-    public static void addStatisticList(String name, TextColor color, Statistic type, List<?> subArgs,
-                                        Expression expression, String formatter) {
-
-        StatisticTopList newList = new StatisticTopList(name, color, type, subArgs, expression, formatter);
+    public static void addNewList(AbstractTopList newList) {
         topLists.add(newList);
 
         // 列表UI添加项目
         listsUI.append(newList.getColoredName()
-                .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/ptl show " + name))
+                .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/ptl show " + newList.getName()))
                 .hoverEvent(HoverEvent.showText(Component.text("点击查看排行榜")))
         ).appendSpace();
     }
 
-    public static List<String> getListsName() {
-        return topLists.stream().map(AbstractTopList::getName).toList();
-    }
-
     public static void showLists(Player player) {
         player.sendMessage(listsUI.build());
+    }
+
+    public static List<String> getListsName() {
+        return topLists.stream().map(AbstractTopList::getName).toList();
     }
 
     public static AbstractTopList getListByName(String name) {

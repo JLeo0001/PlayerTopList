@@ -15,7 +15,6 @@ public final class PlayerTopList extends JavaPlugin {
     public void onEnable() {
         // Plugin startup logic
 
-
         ListsMgr.init();
         Config.init();
 

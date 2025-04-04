@@ -1,20 +1,15 @@
 package cn.JvavRE.playerTopList.data.playerData;
 
 import org.bukkit.OfflinePlayer;
-import org.bukkit.Statistic;
 
-import java.util.List;
-
-public abstract class AbstractPlayerData {
+public class PlayerData {
     protected final OfflinePlayer player;
     protected int count;
 
-    protected AbstractPlayerData(OfflinePlayer player, int count) {
+    public PlayerData(OfflinePlayer player) {
         this.player = player;
-        this.count = count;
+        this.count = 0;
     }
-
-    public abstract void updateCount(Statistic type, List<?> subArgs);
 
     public OfflinePlayer getPlayer() {
         return player;
@@ -22,5 +17,9 @@ public abstract class AbstractPlayerData {
 
     public int getCount() {
         return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
     }
 }

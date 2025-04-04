@@ -1,7 +1,7 @@
 package cn.JvavRE.playerTopList.placeHolder;
 
 import cn.JvavRE.playerTopList.data.ListsMgr;
-import cn.JvavRE.playerTopList.data.playerData.AbstractPlayerData;
+import cn.JvavRE.playerTopList.data.playerData.PlayerData;
 import cn.JvavRE.playerTopList.data.topList.AbstractTopList;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
@@ -43,7 +43,7 @@ public class PTLExpansion extends PlaceholderExpansion {
             AbstractTopList topList = ListsMgr.getListByName(listName);
             if (topList == null) return null;
 
-            AbstractPlayerData playerData = topList.getDataByPlayer(player);
+            PlayerData playerData = topList.getDataByPlayer(player);
             if (playerData == null) return null;
             else return String.valueOf(playerData.getCount());
         }

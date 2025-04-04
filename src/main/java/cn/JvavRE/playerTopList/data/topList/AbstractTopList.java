@@ -1,8 +1,7 @@
 package cn.JvavRE.playerTopList.data.topList;
 
 import cn.JvavRE.playerTopList.config.Config;
-import cn.JvavRE.playerTopList.data.playerData.AbstractPlayerData;
-import cn.JvavRE.playerTopList.data.playerData.StatisticPlayerData;
+import cn.JvavRE.playerTopList.data.playerData.PlayerData;
 import cn.JvavRE.playerTopList.ui.UI;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
@@ -12,14 +11,11 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public abstract class AbstractTopList {
     protected final String name;
-    protected final List<AbstractPlayerData> dataList;
+    protected final List<PlayerData> dataList;
 
     protected final UI ui;
     protected LocalDateTime lastUpdate;
@@ -40,38 +36,61 @@ public abstract class AbstractTopList {
         this.formatter = formatter;
     }
 
-    public abstract void updateDataList();
+    public abstract void updatePlayerData();
 
-    public abstract String getFormattedData(AbstractPlayerData playerData);
+    public abstract String getFormattedData(PlayerData playerData);
 
     protected void initDataList() {
         dataList.clear();
         for (OfflinePlayer player : Bukkit.getOfflinePlayers()) {
-            dataList.add(StatisticPlayerData.of(player));
+            dataList.add(new PlayerData(player));
         }
         sortDataList();
     }
 
+    public void updateDataList() {
+        List<OfflinePlayer> players = Arrays.stream(Bukkit.getOfflinePlayers()).toList();
+
+        // 检查是否存在新玩家, 不需要每次都刷新dataList
+        if (dataList.size() != players.size()) {
+            List<OfflinePlayer> oldPlayers = dataList.stream().map(PlayerData::getPlayer).toList();
+
+            List<OfflinePlayer> newPlayers = players.stream().filter(player -> !oldPlayers.contains(player)).toList();
+            for (OfflinePlayer player : newPlayers) {
+                dataList.add(new PlayerData(player));
+            }
+        }
+
+        updatePlayerData();
+        sortDataList();
+
+        // 更新时间
+        lastUpdate = LocalDateTime.now();
+
+        // 更新ui
+        ui.update();
+    }
+
     protected void sortDataList() {
-        dataList.sort(Comparator.comparingInt(AbstractPlayerData::getCount).reversed());
+        dataList.sort(Comparator.comparingInt(PlayerData::getCount).reversed());
     }
 
     public void showUI(Player player, int page) {
         ui.show(player, page);
     }
 
-    public AbstractPlayerData getDataByPlayer(OfflinePlayer player) {
+    public PlayerData getDataByPlayer(OfflinePlayer player) {
         return dataList.stream().filter(playerData -> Objects.equals(playerData.getPlayer().getName(), player.getName())).findFirst().orElse(null);
     }
 
     public int getPlayerRank(OfflinePlayer player) {
-        AbstractPlayerData playerData = getDataByPlayer(player);
+        PlayerData playerData = getDataByPlayer(player);
 
         if (playerData == null) return -1;
         else return dataList.indexOf(getDataByPlayer(player)) + 1;
     }
 
-    public List<AbstractPlayerData> getDataList() {
+    public List<PlayerData> getDataList() {
         return dataList;
     }
 

@@ -1,16 +1,14 @@
 package cn.JvavRE.playerTopList.data.topList;
 
 import cn.JvavRE.playerTopList.PlayerTopList;
-import cn.JvavRE.playerTopList.data.playerData.AbstractPlayerData;
-import cn.JvavRE.playerTopList.data.playerData.StatisticPlayerData;
+import cn.JvavRE.playerTopList.data.playerData.PlayerData;
 import net.kyori.adventure.text.format.TextColor;
 import net.objecthunter.exp4j.Expression;
-import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Statistic;
+import org.bukkit.entity.EntityType;
 
-import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.IllegalFormatConversionException;
 import java.util.List;
 
@@ -30,30 +28,25 @@ public class StatisticTopList extends AbstractTopList {
         updateDataList();
     }
 
-    public void updateDataList() {
-        List<OfflinePlayer> players = Arrays.stream(Bukkit.getOfflinePlayers()).toList();
 
-        // 检查是否存在新玩家, 不需要每次都刷新dataList
-        if (dataList.size() != players.size()) {
-            List<OfflinePlayer> oldPlayers = dataList.stream().map(AbstractPlayerData::getPlayer).toList();
+    @Override
+    public void updatePlayerData() {
+        for (PlayerData playerData : dataList) {
+            int total = 0;
+            OfflinePlayer player = playerData.getPlayer();
 
-            List<OfflinePlayer> newPlayers = players.stream().filter(player -> !oldPlayers.contains(player)).toList();
-            for (OfflinePlayer player : newPlayers) {
-                dataList.add(StatisticPlayerData.of(player));
+            // 现在只需一次必要的循环
+            switch (type.getType()) {
+                case UNTYPED -> total = player.getStatistic(type);
+                case BLOCK, ITEM -> subArgs.forEach(subArg -> player.getStatistic(type, (Material) subArg));
+                case ENTITY -> subArgs.forEach(subArg -> player.getStatistic(type, (EntityType) subArg));
             }
+
+            playerData.setCount(total);
         }
-
-        dataList.forEach(playerData -> playerData.updateCount(type, subArgs));
-        sortDataList();
-
-        // 更新时间
-        lastUpdate = LocalDateTime.now();
-
-        // 更新ui
-        ui.update();
     }
 
-    public String getFormattedData(AbstractPlayerData playerData) {
+    public String getFormattedData(PlayerData playerData) {
         try {
             return formatter.formatted(calc(playerData));
         } catch (IllegalFormatConversionException e) {
@@ -63,7 +56,7 @@ public class StatisticTopList extends AbstractTopList {
         }
     }
 
-    private Double calc(AbstractPlayerData playerData) {
+    private Double calc(PlayerData playerData) {
         try {
             return expression == null ?
                     playerData.getCount() :

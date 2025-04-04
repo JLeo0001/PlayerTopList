@@ -4,7 +4,7 @@ import cn.JvavRE.playerTopList.PlayerTopList;
 import cn.JvavRE.playerTopList.config.Config;
 import cn.JvavRE.playerTopList.config.UIComponent;
 import cn.JvavRE.playerTopList.config.UIConfig;
-import cn.JvavRE.playerTopList.data.playerData.AbstractPlayerData;
+import cn.JvavRE.playerTopList.data.playerData.PlayerData;
 import cn.JvavRE.playerTopList.data.topList.AbstractTopList;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -34,7 +34,7 @@ public class UI {
     public void update() {
         tempList.clear();
         for (int i = 0; i < topList.getDataList().size(); i++) {
-            AbstractPlayerData playerData = topList.getDataList().get(i);
+            PlayerData playerData = topList.getDataList().get(i);
             String playerName = playerData.getPlayer().getName() != null ? playerData.getPlayer().getName() : "null";
 
             int num = i + 1;

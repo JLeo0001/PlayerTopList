@@ -1,5 +1,6 @@
 package cn.JvavRE.playerTopList.data.topList;
 
+import cn.JvavRE.playerTopList.PlayerTopList;
 import cn.JvavRE.playerTopList.config.Config;
 import cn.JvavRE.playerTopList.data.playerData.PlayerData;
 import cn.JvavRE.playerTopList.ui.UI;
@@ -38,8 +39,6 @@ public abstract class AbstractTopList {
 
     public abstract void updatePlayerData();
 
-    public abstract String getFormattedData(PlayerData playerData);
-
     protected void initDataList() {
         dataList.clear();
         for (OfflinePlayer player : Bukkit.getOfflinePlayers()) {
@@ -72,7 +71,7 @@ public abstract class AbstractTopList {
     }
 
     protected void sortDataList() {
-        dataList.sort(Comparator.comparingInt(PlayerData::getCount).reversed());
+        dataList.sort(Comparator.comparingDouble(PlayerData::getCount).reversed());
     }
 
     public void showUI(Player player, int page) {
@@ -88,6 +87,29 @@ public abstract class AbstractTopList {
 
         if (playerData == null) return -1;
         else return dataList.indexOf(getDataByPlayer(player)) + 1;
+    }
+
+    public String getFormattedData(PlayerData playerData) {
+        try {
+            return formatter.formatted(getExpressionResult(playerData));
+        } catch (IllegalFormatConversionException e) {
+            formatter = "%.0f";
+            PlayerTopList.getInstance().getLogger().warning("格式化字符串出现错误, 已重置为%.0f");
+            return formatter.formatted(getExpressionResult(playerData));
+        }
+    }
+
+    private Double getExpressionResult(PlayerData playerData) {
+        try {
+            return expression == null ?
+                    playerData.getCount() :
+                    expression.setVariable("count", playerData.getCount()).evaluate();
+
+        } catch (Exception e) {
+            expression = null;
+            PlayerTopList.getInstance().getLogger().warning("表达式出现错误, 已禁用表达式");
+            return playerData.getCount();
+        }
     }
 
     public List<PlayerData> getDataList() {

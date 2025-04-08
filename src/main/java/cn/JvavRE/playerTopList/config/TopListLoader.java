@@ -97,7 +97,7 @@ public class TopListLoader {
             default -> new ArrayList<Material>();
         };
 
-        ListsMgr.addNewList(new StatisticTopList(name, color, statistic, subArgs, exp, formater));
+        ListsMgr.addNewList(new StatisticTopList(name, color, exp, formater, statistic, subArgs));
         plugin.getLogger().info("成功添加列表: " + name + " (" + type + ")");
     }
 

@@ -4,7 +4,7 @@ import org.bukkit.OfflinePlayer;
 
 public class PlayerData {
     protected final OfflinePlayer player;
-    protected int count;
+    protected double count;
 
     public PlayerData(OfflinePlayer player) {
         this.player = player;
@@ -15,11 +15,11 @@ public class PlayerData {
         return player;
     }
 
-    public int getCount() {
+    public double getCount() {
         return count;
     }
 
-    public void setCount(int count) {
+    public void setCount(double count) {
         this.count = count;
     }
 }

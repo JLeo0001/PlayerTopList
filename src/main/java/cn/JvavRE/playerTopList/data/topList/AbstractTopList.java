@@ -3,13 +3,10 @@ package cn.JvavRE.playerTopList.data.topList;
 import cn.JvavRE.playerTopList.PlayerTopList;
 import cn.JvavRE.playerTopList.config.Config;
 import cn.JvavRE.playerTopList.data.playerData.PlayerData;
-import cn.JvavRE.playerTopList.ui.UI;
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.objecthunter.exp4j.Expression;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -18,7 +15,7 @@ public abstract class AbstractTopList {
     protected final String name;
     protected final List<PlayerData> dataList;
 
-    protected final UI ui;
+    protected final TextColor nameColor;
     protected LocalDateTime lastUpdate;
 
     protected Expression expression;
@@ -30,8 +27,8 @@ public abstract class AbstractTopList {
         this.name = name;
         this.dataList = new ArrayList<>();
 
+        this.nameColor = nameColor;
         this.lastUpdate = LocalDateTime.now();
-        this.ui = new UI(this, nameColor);
 
         this.expression = expression;
         this.formatter = formatter;
@@ -65,21 +62,10 @@ public abstract class AbstractTopList {
 
         // 更新时间
         lastUpdate = LocalDateTime.now();
-
-        // 更新ui
-        ui.update();
     }
 
     protected void sortDataList() {
         dataList.sort(Comparator.comparingDouble(PlayerData::getCount).reversed());
-    }
-
-    public void showUI(Player player, int page) {
-        ui.show(player, page);
-    }
-
-    public PlayerData getDataByPlayer(OfflinePlayer player) {
-        return dataList.stream().filter(playerData -> Objects.equals(playerData.getPlayer().getName(), player.getName())).findFirst().orElse(null);
     }
 
     public int getPlayerRank(OfflinePlayer player) {
@@ -87,6 +73,10 @@ public abstract class AbstractTopList {
 
         if (playerData == null) return -1;
         else return dataList.indexOf(getDataByPlayer(player)) + 1;
+    }
+
+    public PlayerData getDataByPlayer(OfflinePlayer player) {
+        return dataList.stream().filter(playerData -> Objects.equals(playerData.getPlayer().getName(), player.getName())).findFirst().orElse(null);
     }
 
     public String getFormattedData(PlayerData playerData) {
@@ -112,19 +102,19 @@ public abstract class AbstractTopList {
         }
     }
 
-    public List<PlayerData> getDataList() {
-        return dataList;
-    }
-
     public String getName() {
         return name;
     }
 
-    public String getUpdateTime() {
-        return lastUpdate.format(Config.getFormatter());
+    public TextColor getNameColor() {
+        return nameColor;
     }
 
-    public Component getColoredName() {
-        return ui.getColoredName();
+    public List<PlayerData> getDataList() {
+        return dataList;
+    }
+
+    public String getUpdateTime() {
+        return lastUpdate.format(Config.getFormatter());
     }
 }

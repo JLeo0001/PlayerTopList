@@ -4,6 +4,7 @@ import cn.JvavRE.playerTopList.PlayerTopList;
 import cn.JvavRE.playerTopList.config.Config;
 import cn.JvavRE.playerTopList.data.ListsMgr;
 import cn.JvavRE.playerTopList.data.topList.AbstractTopList;
+import cn.JvavRE.playerTopList.ui.UI;
 import cn.JvavRE.playerTopList.utils.Digit;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
@@ -80,7 +81,7 @@ public class Command implements CommandExecutor {
         }
 
         if (name.equalsIgnoreCase("all")) {
-            ListsMgr.showLists(player);
+            UI.showListsUI(player);
             return;
         }
 
@@ -91,6 +92,6 @@ public class Command implements CommandExecutor {
             return;
         }
 
-        topList.showUI(player, page);
+        UI.showTopListUI(player, topList, page);
     }
 }

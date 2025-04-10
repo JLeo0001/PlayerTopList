@@ -21,9 +21,6 @@ public class StatisticTopList extends AbstractTopList {
 
         this.type = type;
         this.subArgs = subArgs;
-
-        initDataList();
-        updateDataList();
     }
 
 

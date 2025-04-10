@@ -65,7 +65,7 @@ public class UI {
 
             int num = i + 1;
             Component listItem = UIConfig.get(UIComponent.ITEM)
-                    .replaceText(config -> config.match(Config.getPattern())
+                    .replaceText(config -> config.match(Config.getUIReplacePattern())
                             .replacement((matchResult, textBuilder) -> {
                                 String key = matchResult.group();
                                 return switch (key) {
@@ -92,7 +92,7 @@ public class UI {
         int totalPages = PageMgr.getTotalPages(topList.getDataList());
 
         // 变量替换
-        return builder.build().replaceText(config -> config.match(Config.getPattern())
+        return builder.build().replaceText(config -> config.match(Config.getUIReplacePattern())
                 .replacement((matchResult, textBuilder) -> {
                     String key = matchResult.group();
                     return switch (key) {
@@ -109,6 +109,6 @@ public class UI {
     }
 
     private static Component getColoredListName(AbstractTopList topList) {
-        return Component.text("| " + topList.getName() + " |").color(topList.getNameColor());
+        return Component.text("[" + topList.getName() + "]").color(topList.getNameColor());
     }
 }

@@ -3,6 +3,7 @@ package cn.JvavRE.playerTopList;
 import cn.JvavRE.playerTopList.command.Command;
 import cn.JvavRE.playerTopList.config.Config;
 import cn.JvavRE.playerTopList.data.ListsMgr;
+import cn.JvavRE.playerTopList.placeHolder.PTLExpansion;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class PlayerTopList extends JavaPlugin {
@@ -14,9 +15,15 @@ public final class PlayerTopList extends JavaPlugin {
     public void onEnable() {
         // Plugin startup logic
 
-        new Command(this);
-        ListsMgr.init(this);
-        Config.init(this);
+        ListsMgr.init();
+        Config.init();
+
+        new Command();
+
+        if (Config.isPapiEnabled()) {
+            getLogger().info("检测到 PlaceholderAPI, 启用相关功能");
+            new PTLExpansion().register();
+        }
 
         ListsMgr.startTask();
     }

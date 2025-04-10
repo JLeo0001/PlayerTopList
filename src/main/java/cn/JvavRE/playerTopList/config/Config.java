@@ -6,15 +6,16 @@ import java.time.format.DateTimeFormatter;
 import java.util.regex.Pattern;
 
 public class Config {
-    private static final Pattern pattern = Pattern.compile("\\{\\w+}");
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final Pattern UIReplacePattern = Pattern.compile("\\{\\w+}");
+    private static final Pattern listNamePattern = Pattern.compile("^[^_]+$");
+    private static final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final boolean isPapiEnabled = PlayerTopList.getInstance().getServer().getPluginManager().isPluginEnabled("PlaceholderAPI");
+    private static final PlayerTopList plugin = PlayerTopList.getInstance();
 
-    private static PlayerTopList plugin;
     private static int pageSize;
     private static int updateInterval;
 
-    public static void init(PlayerTopList plugin) {
-        Config.plugin = plugin;
+    public static void init() {
         loadConfig();
     }
 
@@ -26,6 +27,9 @@ public class Config {
 
         UIConfig.loadConfig(plugin.getConfig().getConfigurationSection("ui"));
         TopListLoader.loadTopLists(plugin.getConfig().getConfigurationSection("lists"));
+
+        pageSize = Math.min(pageSize, 1);
+        updateInterval = Math.min(updateInterval, 30);
 
         plugin.getLogger().info("配置加载完成");
     }
@@ -43,11 +47,19 @@ public class Config {
         return updateInterval;
     }
 
-    public static Pattern getPattern() {
-        return pattern;
+    public static Pattern getUIReplacePattern() {
+        return UIReplacePattern;
     }
 
-    public static DateTimeFormatter getFormatter() {
-        return formatter;
+    public static Pattern getListNamePattern() {
+        return listNamePattern;
+    }
+
+    public static DateTimeFormatter getTimeFormatter() {
+        return timeFormatter;
+    }
+
+    public static boolean isPapiEnabled() {
+        return isPapiEnabled;
     }
 }

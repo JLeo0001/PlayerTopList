@@ -34,7 +34,7 @@ public class CommandCompleter implements org.bukkit.command.TabCompleter {
     private List<String> onShow(CommandSender sender, String[] args) {
         if (!sender.hasPermission("playertoplist.view")) return List.of();
 
-        List<String> list = new ArrayList<>(ListsMgr.getListsName());
+        List<String> list = new ArrayList<>(ListsMgr.getListsNameNotHidden());
         list.add("all");
         return list;
     }

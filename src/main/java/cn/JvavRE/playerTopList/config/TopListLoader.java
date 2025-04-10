@@ -51,18 +51,18 @@ public class TopListLoader {
             plugin.getLogger().info("正在加载列表: " + name);
 
             // 两种列表分别注册
-            if (isStatistic(type)){
+            if (isStatistic(type)) {
                 addStatisticListToManager(name, nameColor, type, expressionString, formatter, material, entity);
-            } else if (isPlaceHolder(type)){
+            } else if (isPlaceHolder(type)) {
                 addPlaceHolderListToManager(name, nameColor, type, expressionString, formatter);
-            }else {
+            } else {
                 plugin.getLogger().warning("不是有效的排行榜类型: '" + type + "'");
             }
         }
     }
 
-    private static void addPlaceHolderListToManager(String name, String colorName, String  typeName,
-                                                   String expressionString, String formater){
+    private static void addPlaceHolderListToManager(String name, String colorName, String typeName,
+                                                    String expressionString, String formater) {
 
         TextColor color = getColor(colorName);
         Expression exp = getExpression(expressionString);
@@ -153,7 +153,7 @@ public class TopListLoader {
     }
 
     private static boolean isName(String name) {
-        return !name.isBlank() && name.length() < 10;
+        return !name.isBlank() && Config.getListNamePattern().matcher(name).matches();
     }
 
     private static TextColor getColor(String color) {

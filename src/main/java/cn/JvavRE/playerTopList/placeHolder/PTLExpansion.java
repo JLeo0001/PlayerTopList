@@ -26,6 +26,39 @@ public class PTLExpansion extends PlaceholderExpansion {
 
     @Override
     public @Nullable String onRequest(OfflinePlayer player, @NotNull String params) {
+        // ptl_player_rank_sum_<listName1>_<listName2>_...
+        if (params.startsWith("player_rank_sum_")) {
+            String[] listNames = params.substring(16).split("_");
+
+            int sum = 0;
+            for (String listName : listNames) {
+                AbstractTopList topList = ListsMgr.getListByName(listName);
+                if (topList == null) continue;
+
+                sum += topList.getPlayerRank(player);
+            }
+
+            return String.valueOf(sum);
+        }
+
+        // ptl_player_count_sum_<listName1>_<listName2>_...
+        if (params.startsWith("player_count_sum_")) {
+            String[] listNames = params.substring(17).split("_");
+
+            double sum = 0;
+            for (String listName : listNames) {
+                AbstractTopList topList = ListsMgr.getListByName(listName);
+                if (topList == null) continue;
+
+                PlayerData playerData = topList.getDataByPlayer(player);
+                if (playerData == null) continue;
+
+                sum += playerData.getCount();
+            }
+
+            return String.valueOf(sum);
+        }
+
         // ptl_player_rank_<listName>
         if (params.startsWith("player_rank_")) {
             String listName = params.substring(12);

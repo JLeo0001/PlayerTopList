@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 
 public class Config {
     private static final Pattern UIReplacePattern = Pattern.compile("\\{\\w+}");
+    private static final Pattern listNamePattern = Pattern.compile("^[^_]+$");
     private static final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private static final boolean isPapiEnabled = PlayerTopList.getInstance().getServer().getPluginManager().isPluginEnabled("PlaceholderAPI");
     private static final PlayerTopList plugin = PlayerTopList.getInstance();
@@ -48,6 +49,10 @@ public class Config {
 
     public static Pattern getUIReplacePattern() {
         return UIReplacePattern;
+    }
+
+    public static Pattern getListNamePattern() {
+        return listNamePattern;
     }
 
     public static DateTimeFormatter getTimeFormatter() {

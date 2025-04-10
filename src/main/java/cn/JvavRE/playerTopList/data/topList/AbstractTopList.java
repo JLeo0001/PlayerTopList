@@ -63,7 +63,7 @@ public abstract class AbstractTopList {
     public int getPlayerRank(OfflinePlayer player) {
         PlayerData playerData = getDataByPlayer(player);
 
-        if (playerData == null) return -1;
+        if (playerData == null) return 0;
         else return dataList.indexOf(getDataByPlayer(player)) + 1;
     }
 

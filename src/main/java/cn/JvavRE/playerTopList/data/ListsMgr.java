@@ -45,8 +45,8 @@ public class ListsMgr {
         UI.addTopListToUI(newList);
     }
 
-    public static List<String> getListsName() {
-        return topLists.stream().map(AbstractTopList::getName).toList();
+    public static List<String> getListsNameNotHidden() {
+        return topLists.stream().filter(topList -> !topList.isHidden()).map(AbstractTopList::getName).toList();
     }
 
     public static AbstractTopList getListByName(String name) {

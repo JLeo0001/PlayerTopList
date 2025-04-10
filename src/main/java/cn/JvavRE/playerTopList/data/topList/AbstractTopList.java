@@ -13,6 +13,7 @@ import java.util.*;
 
 public abstract class AbstractTopList {
     protected final String name;
+    protected final boolean hidden;
     protected final List<PlayerData> dataList;
 
     protected final TextColor nameColor;
@@ -21,10 +22,11 @@ public abstract class AbstractTopList {
     protected Expression expression;
     protected String formatter;
 
-    public AbstractTopList(String name, TextColor nameColor,
+    public AbstractTopList(String name, TextColor nameColor, boolean hidden,
                            Expression expression, String formatter) {
 
         this.name = name;
+        this.hidden = hidden;
         this.dataList = new ArrayList<>();
 
         this.nameColor = nameColor;
@@ -108,5 +110,9 @@ public abstract class AbstractTopList {
 
     public String getUpdateTime() {
         return lastUpdate.format(Config.getTimeFormatter());
+    }
+
+    public boolean isHidden() {
+        return hidden;
     }
 }

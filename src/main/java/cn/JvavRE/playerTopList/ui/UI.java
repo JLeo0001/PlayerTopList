@@ -29,6 +29,8 @@ public class UI {
     }
 
     public static void addTopListToUI(AbstractTopList topList) {
+        if (topList.isHidden()) return;
+
         listsUI.append(getColoredListName(topList)
                 .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/ptl show " + topList.getName()))
                 .hoverEvent(HoverEvent.showText(Component.text("点击查看排行榜")))

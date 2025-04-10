@@ -2,6 +2,7 @@ package cn.JvavRE.playerTopList.config;
 
 import cn.JvavRE.playerTopList.PlayerTopList;
 import cn.JvavRE.playerTopList.data.ListsMgr;
+import cn.JvavRE.playerTopList.data.topList.PlaceHolderTopList;
 import cn.JvavRE.playerTopList.data.topList.StatisticTopList;
 import cn.JvavRE.playerTopList.utils.SubStatistic;
 import cn.JvavRE.playerTopList.utils.TagStatistic;
@@ -34,37 +35,47 @@ public class TopListLoader {
             if (listSection == null) continue;
 
             // 榜单参数
-            String type = listSection.getString("type");
+            String type = listSection.getString("type", "");
             String nameColor = listSection.getString("color", "#FFFFFF");
             String expressionString = listSection.getString("expression", "");
             String formatter = listSection.getString("formatter", "%.0f");
             List<String> material = listSection.getStringList("material");
             List<String> entity = listSection.getStringList("entity");
 
-            addStatisticListToManager(name, nameColor, type, material, entity, expressionString, formatter);
+            // 检查名称
+            if (!isName(name)) {
+                plugin.getLogger().warning("不是有效的列表名称: '" + name + "'");
+                return;
+            }
+
+            plugin.getLogger().info("正在加载列表: " + name);
+
+            // 两种列表分别注册
+            if (isStatistic(type)){
+                addStatisticListToManager(name, nameColor, type, expressionString, formatter, material, entity);
+            } else if (isPlaceHolder(type)){
+                addPlaceHolderListToManager(name, nameColor, type, expressionString, formatter);
+            }else {
+                plugin.getLogger().warning("不是有效的排行榜类型: '" + type + "'");
+            }
         }
     }
 
-    private static void addStatisticListToManager(String name, String colorName, String type,
-                                                  List<String> materialNames, List<String> entityNames,
-                                                  String expressionString, String formater) {
+    private static void addPlaceHolderListToManager(String name, String colorName, String  typeName,
+                                                   String expressionString, String formater){
 
-        // 检查名称
-        if (!isName(name)) {
-            plugin.getLogger().warning("不是有效的列表名称: '" + name + "'");
-            return;
-        }
+        TextColor color = getColor(colorName);
+        Expression exp = getExpression(expressionString);
 
-        plugin.getLogger().info("正在加载列表: " + name);
+        ListsMgr.addNewList(new PlaceHolderTopList(name, color, exp, formater, typeName));
+        plugin.getLogger().info("成功添加列表: " + name + " (" + typeName + ")");
+    }
 
-        // 检查类型
-        if (!isStatistic(type)) {
-            plugin.getLogger().warning("不是有效的统计类型: '" + type + "'");
-            return;
-        }
+    private static void addStatisticListToManager(String name, String colorName, String typeName,
+                                                  String expressionString, String formater,
+                                                  List<String> materialNames, List<String> entityNames) {
 
-        // 加载属性
-        Statistic statistic = Statistic.valueOf(type);
+        Statistic statistic = Statistic.valueOf(typeName);
         TextColor color = getColor(colorName);
         Expression exp = getExpression(expressionString);
 
@@ -98,7 +109,7 @@ public class TopListLoader {
         };
 
         ListsMgr.addNewList(new StatisticTopList(name, color, exp, formater, statistic, subArgs));
-        plugin.getLogger().info("成功添加列表: " + name + " (" + type + ")");
+        plugin.getLogger().info("成功添加列表: " + name + " (" + typeName + ")");
     }
 
     private static <T extends Enum<T> & Keyed> Stream<T> getSubArgStream(Class<T> tClass, List<String> args, String defaultSub,
@@ -128,6 +139,10 @@ public class TopListLoader {
         return result.stream();
     }
 
+    private static boolean isPlaceHolder(String type) {
+        return type.startsWith("%") && type.endsWith("%");
+    }
+
     private static boolean isStatistic(String type) {
         try {
             Statistic.valueOf(type);
@@ -138,7 +153,7 @@ public class TopListLoader {
     }
 
     private static boolean isName(String name) {
-        return name != null && !name.isEmpty();
+        return !name.isBlank() && name.length() < 10;
     }
 
     private static TextColor getColor(String color) {

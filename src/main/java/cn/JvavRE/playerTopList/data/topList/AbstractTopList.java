@@ -36,14 +36,6 @@ public abstract class AbstractTopList {
 
     public abstract void updatePlayerData();
 
-    protected void initDataList() {
-        dataList.clear();
-        for (OfflinePlayer player : Bukkit.getOfflinePlayers()) {
-            dataList.add(new PlayerData(player));
-        }
-        sortDataList();
-    }
-
     public void updateDataList() {
         List<OfflinePlayer> players = Arrays.stream(Bukkit.getOfflinePlayers()).toList();
 
@@ -115,6 +107,6 @@ public abstract class AbstractTopList {
     }
 
     public String getUpdateTime() {
-        return lastUpdate.format(Config.getFormatter());
+        return lastUpdate.format(Config.getTimeFormatter());
     }
 }

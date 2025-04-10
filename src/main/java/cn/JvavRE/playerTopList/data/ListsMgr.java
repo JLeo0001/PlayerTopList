@@ -35,13 +35,9 @@ public class ListsMgr {
     }
 
     public static void reset() {
-        stopTask();
+        updateTask.cancel();
         topLists.clear();
         UI.resetListsUI();
-    }
-
-    public static void stopTask() {
-        updateTask.cancel();
     }
 
     public static void addNewList(AbstractTopList newList) {

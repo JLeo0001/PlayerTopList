@@ -28,8 +28,8 @@ public class Config {
         UIConfig.loadConfig(plugin.getConfig().getConfigurationSection("ui"));
         TopListLoader.loadTopLists(plugin.getConfig().getConfigurationSection("lists"));
 
-        pageSize = Math.min(pageSize, 1);
-        updateInterval = Math.min(updateInterval, 30);
+        pageSize = Math.max(pageSize, 1);
+        updateInterval = Math.max(updateInterval, 30);
 
         plugin.getLogger().info("配置加载完成");
     }

@@ -23,7 +23,7 @@ public class PlaceHolderTopList extends AbstractTopList {
         for (PlayerData playerData : dataList) {
             String placeHolderResult = PlaceholderAPI.setPlaceholders(playerData.getPlayer(), placeHolder);
 
-            playerData.setCount(Digit.isDigit(placeHolderResult) ? Double.parseDouble(placeHolderResult) : 0.0);
+            playerData.setCount(Digit.isDigit(placeHolderResult) ? Double.parseDouble(placeHolderResult) : 0);
         }
     }
 }

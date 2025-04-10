@@ -10,6 +10,8 @@
  - 支持使用表达式更改排行榜数据
  - 支持格式化显示数据
  - 支持使用标签
+ - 支持使用place holder作为排行榜变量
+ - 内置4个place holder方便使用
 
 ## 命令
  - ```/ptl reload``` 重载配置
@@ -18,6 +20,12 @@
 ## 权限
  - ```playertoplist.admin``` 控制能否使用```reload```命令
  - ```playertoplist.view``` 控制能否使用```view```命令
+
+## PlaceHolder
+ - ```%ptl_player_rank_<排行榜名称>%``` 获取玩家在指定排行榜的排名
+ - ```%ptl_player_count_<排行榜名称>%``` 获取玩家在值排行榜的数值
+ - ```%ptl_player_rank_sum_<排行榜名称1>_<排行榜名称2>_...%``` <br>获取玩家在指定的所有排行榜中排名的总和
+ - ```%ptl_player_count_sum_<排行榜名称1>_<排行榜名称2>_...%``` <br>获取玩家在指定的所有排行榜中数值的总和
 
 ## 配置文件
 ```yaml
@@ -44,6 +52,7 @@ lists:
     color: "#FFA500"
 
     # (必填) 这个是统计数据类型, 可用值见附录1
+    # 也可以使用place holder, 具体使用方法见下方跑图榜
     type: MINE_BLOCK
 
     # (选择性必填) 当类型为Statistic.Type.BLOCK或者Statistic.Type.ITEM时必填
@@ -60,6 +69,9 @@ lists:
     # 注意!!!该项为列表类型
     entity: [all]
 
+    # (选填) 是否隐藏
+    hidden: false
+
     # (选填) 数值表达式:
     # 用于修正排行榜数值
     expression: "count / 64"
@@ -74,6 +86,12 @@ lists:
     material: [ coal_ores, copper_ores, diamond_ores, emerald_ores, gold_ores, lapis_ores, redstone_ores, NETHER_QUARTZ_ORE, ANCIENT_DEBRIS ]
     expression: "count / 64"
     formatter: "%.1f 组"
+
+  跑图榜:
+    color: "#00FF00"
+    type: "%ptl_player_count_sum_走路榜_跑步榜_飞行榜%"
+    expression: "count / 1000"
+    formatter: "%.1f 公里"
 
   击杀总榜:
     color: "#FF00FF"
@@ -112,6 +130,19 @@ lists:
     expression: "count / 20 / 60 / 60"
     formatter: "%.1f 小时"
 
+  # 下面这些是作为跑图榜的计算来源
+  走路榜:
+    hidden: true
+    type: WALK_ONE_CM
+
+  跑步榜:
+    hidden: true
+    type: SPRINT_ONE_CM
+
+  飞行榜:
+    hidden: true
+    type: AVIATE_ONE_CM
+
 # 附录
 # 1.可用统计类型见: https://bukkit.windit.net/javadoc/org/bukkit/Statistic.html
 # 2.可用材料类型见: https://bukkit.windit.net/javadoc/org/bukkit/Material.html
@@ -121,5 +152,5 @@ lists:
 
 ## TODO
  - [x] 优化启动时某些配置加载极慢的问题
- - [ ] 添加对placeholder的支持
+ - [x] 添加对placeholder的支持
  - [x] 添加对内置标签分组的支持

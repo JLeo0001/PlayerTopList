@@ -14,6 +14,7 @@ import java.util.*;
 public abstract class AbstractTopList {
     protected final String name;
     protected final boolean hidden;
+    protected final boolean reversed;
     protected final List<PlayerData> dataList;
 
     protected final TextColor nameColor;
@@ -22,11 +23,13 @@ public abstract class AbstractTopList {
     protected Expression expression;
     protected String formatter;
 
-    public AbstractTopList(String name, TextColor nameColor, boolean hidden,
+    public AbstractTopList(String name, TextColor nameColor,
+                           boolean hidden, boolean reversed,
                            Expression expression, String formatter) {
 
         this.name = name;
         this.hidden = hidden;
+        this.reversed = reversed;
         this.dataList = new ArrayList<>();
 
         this.nameColor = nameColor;
@@ -59,7 +62,8 @@ public abstract class AbstractTopList {
     }
 
     protected void sortDataList() {
-        dataList.sort(Comparator.comparingDouble(PlayerData::getCount).reversed());
+        if (reversed) dataList.sort(Comparator.comparingDouble(PlayerData::getCount));
+        else dataList.sort(Comparator.comparingDouble(PlayerData::getCount).reversed());
     }
 
     public int getPlayerRank(OfflinePlayer player) {

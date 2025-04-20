@@ -40,6 +40,7 @@ public class TopListLoader {
             String expressionString = listSection.getString("expression", "");
             String formatter = listSection.getString("formatter", "%.0f");
             boolean hidden = listSection.getBoolean("hidden", false);
+            boolean reversed = listSection.getBoolean("reversed", false);
             List<String> material = listSection.getStringList("material");
             List<String> entity = listSection.getStringList("entity");
 
@@ -53,26 +54,28 @@ public class TopListLoader {
 
             // 两种列表分别注册
             if (isStatistic(type)) {
-                addStatisticListToManager(name, nameColor, type, hidden, expressionString, formatter, material, entity);
+                addStatisticListToManager(name, nameColor, type, hidden, reversed, expressionString, formatter, material, entity);
             } else if (Config.isPapiEnabled() && isPlaceHolder(type)) {
-                addPlaceHolderListToManager(name, nameColor, type, hidden, expressionString, formatter);
+                addPlaceHolderListToManager(name, nameColor, type, hidden, reversed, expressionString, formatter);
             } else {
                 plugin.getLogger().warning("不是有效的排行榜类型: '" + type + "'");
             }
         }
     }
 
-    private static void addPlaceHolderListToManager(String name, String colorName, String typeName, boolean hidden,
+    private static void addPlaceHolderListToManager(String name, String colorName, String typeName,
+                                                    boolean hidden, boolean reversed,
                                                     String expressionString, String formater) {
 
         TextColor color = getColor(colorName);
         Expression exp = getExpression(expressionString);
 
-        ListsMgr.addNewList(new PlaceHolderTopList(name, color, hidden, exp, formater, typeName));
+        ListsMgr.addNewList(new PlaceHolderTopList(name, color, hidden, reversed, exp, formater, typeName));
         plugin.getLogger().info("成功添加列表: " + name + " (" + typeName + ")");
     }
 
-    private static void addStatisticListToManager(String name, String colorName, String typeName, boolean hidden,
+    private static void addStatisticListToManager(String name, String colorName, String typeName,
+                                                  boolean hidden, boolean reversed,
                                                   String expressionString, String formater,
                                                   List<String> materialNames, List<String> entityNames) {
 
@@ -109,7 +112,7 @@ public class TopListLoader {
             default -> new ArrayList<Material>();
         };
 
-        ListsMgr.addNewList(new StatisticTopList(name, color, hidden, exp, formater, statistic, subArgs));
+        ListsMgr.addNewList(new StatisticTopList(name, color, hidden, reversed, exp, formater, statistic, subArgs));
         plugin.getLogger().info("成功添加列表: " + name + " (" + typeName + ")");
     }
 

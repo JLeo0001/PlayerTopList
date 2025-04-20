@@ -9,11 +9,12 @@ import net.objecthunter.exp4j.Expression;
 public class PlaceHolderTopList extends AbstractTopList {
     private final String placeHolder;
 
-    public PlaceHolderTopList(String name, TextColor nameColor, boolean hidden,
+    public PlaceHolderTopList(String name, TextColor nameColor,
+                              boolean hidden, boolean reversed,
                               Expression expression, String formatter,
                               String placeHolder) {
 
-        super(name, nameColor, hidden, expression, formatter);
+        super(name, nameColor, hidden, reversed, expression, formatter);
 
         this.placeHolder = placeHolder;
     }

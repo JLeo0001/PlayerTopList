@@ -14,11 +14,12 @@ public class StatisticTopList extends AbstractTopList {
     private final Statistic type;
     private final List<?> subArgs;
 
-    public StatisticTopList(String name, TextColor nameColor, boolean hidden,
+    public StatisticTopList(String name, TextColor nameColor,
+                            boolean hidden, boolean reversed,
                             Expression expression, String formatter,
                             Statistic type, List<?> subArgs) {
 
-        super(name, nameColor, hidden, expression, formatter);
+        super(name, nameColor, hidden, reversed, expression, formatter);
 
         this.type = type;
         this.subArgs = subArgs;

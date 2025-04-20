@@ -2,7 +2,6 @@ package cn.JvavRE.playerTopList.config;
 
 import cn.JvavRE.playerTopList.PlayerTopList;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -36,19 +35,7 @@ public class UIConfig {
 
         components.clear();
         components.putAll(newMap);
-        generateUI();
 
         PlayerTopList.getInstance().getLogger().info("加载UI配置完成");
-    }
-
-    private static void generateUI() {
-        // 直接缓存UI(不知道有没有性能提升)
-        TextComponent.Builder builder = Component.text();
-
-        builder.append(get(UIComponent.HEADER)).appendNewline();
-        builder.append(Component.text("{items}"));
-        builder.append(get(UIComponent.FOOTER));
-
-        components.put(UIComponent.MAIN_UI, builder.build());
     }
 }

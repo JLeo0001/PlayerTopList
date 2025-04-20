@@ -49,6 +49,13 @@ lists:
     # java格式化字符串
     formatter: "%.1f 组"
 
+  放置榜:
+    color: "#A52A2A"
+    type: USE_ITEM
+    material: [ blocks ]
+    expression: "count / 64"
+    formatter: "%.1f 组"
+
   挖矿榜:
     color: "#FFD700"
     type: MINE_BLOCK

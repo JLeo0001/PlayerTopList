@@ -10,6 +10,7 @@
  - 支持使用表达式更改排行榜数据
  - 支持格式化显示数据
  - 支持使用标签
+ - 支持反转排序
  - 支持使用place holder作为排行榜变量
  - 内置4个place holder方便使用
 
@@ -78,6 +79,24 @@ lists:
 
     # (选填) 数字格式:
     # java格式化字符串
+    formatter: "%.1f 组"
+
+    # (选填) 排序:
+    # false: 从大到小
+    # true: 从小到大
+    reversed: false
+
+  总榜:
+    color: "#FB156B"
+    type: "%ptl_player_rank_sum_挖掘总榜_放置榜_挖矿榜_跑图榜_击杀总榜_击杀玩家榜_死亡榜_钓鱼榜_附魔榜_合成榜_交易榜_在线时间%"
+    reversed: true
+    formatter: "%.0f 排名和"
+
+  放置榜:
+    color: "#A52A2A"
+    type: USE_ITEM
+    material: [ blocks ]
+    expression: "count / 64"
     formatter: "%.1f 组"
 
   挖矿榜:

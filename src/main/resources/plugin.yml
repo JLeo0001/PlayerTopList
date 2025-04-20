@@ -1,5 +1,5 @@
 name: PlayerTopList
-version: '1.0'
+version: '1.2.1'
 main: cn.JvavRE.playerTopList.PlayerTopList
 api-version: '1.21'
 folia-supported: true

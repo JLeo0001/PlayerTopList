@@ -49,6 +49,17 @@ lists:
     # java格式化字符串
     formatter: "%.1f 组"
 
+    # (选填) 排序:
+    # false: 从大到小
+    # true: 从小到大
+    reversed: false
+
+  总榜:
+    color: "#FB156B"
+    type: "%ptl_player_rank_sum_挖掘总榜_放置榜_挖矿榜_跑图榜_击杀总榜_击杀玩家榜_死亡榜_钓鱼榜_附魔榜_合成榜_交易榜_在线时间%"
+    reversed: true
+    formatter: "%.0f 排名和"
+
   放置榜:
     color: "#A52A2A"
     type: USE_ITEM

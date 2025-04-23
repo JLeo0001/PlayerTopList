@@ -109,7 +109,7 @@ lists:
   跑图榜:
     color: "#00FF00"
     type: "%ptl_player_count_sum_走路榜_跑步榜_飞行榜%"
-    expression: "count / 1000"
+    expression: "count / 100 / 1000"
     formatter: "%.1f 公里"
 
   击杀总榜:

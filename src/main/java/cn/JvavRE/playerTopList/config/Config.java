@@ -14,6 +14,7 @@ public class Config {
 
     private static int pageSize;
     private static int updateInterval;
+    private static boolean debugOutput;
 
     public static void init() {
         loadConfig();
@@ -24,6 +25,7 @@ public class Config {
 
         pageSize = plugin.getConfig().getInt("page-size", 10);
         updateInterval = plugin.getConfig().getInt("update-interval", 60);
+        debugOutput = plugin.getConfig().getBoolean("debug-output", false);
 
         UIConfig.loadConfig(plugin.getConfig().getConfigurationSection("ui"));
         TopListLoader.loadTopLists(plugin.getConfig().getConfigurationSection("lists"));
@@ -61,5 +63,9 @@ public class Config {
 
     public static boolean isPapiEnabled() {
         return isPapiEnabled;
+    }
+
+    public static boolean isDebugOutput() {
+        return debugOutput;
     }
 }

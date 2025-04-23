@@ -26,7 +26,7 @@ public class ListsMgr {
                 plugin,
                 task -> {
                     topLists.forEach(AbstractTopList::updateDataList);
-                    plugin.getLogger().info("排行榜已更新");
+                    if (Config.isDebugOutput()) plugin.getLogger().info("排行榜已更新");
                 },
                 1,
                 Config.getUpdateInterval(),

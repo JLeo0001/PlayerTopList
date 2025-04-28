@@ -47,19 +47,41 @@ public class UI {
     public static void showTopListUI(Player player, AbstractTopList topList, int page) {
         Bukkit.getAsyncScheduler().runNow(
                 PlayerTopList.getInstance(),
-                task -> player.sendMessage(generateTopListUI(topList, page))
+                task -> player.sendMessage(generateTopListUI(topList, page, player))
         );
     }
 
-    private static Component generateTopListUI(AbstractTopList topList, int page) {
+    private static Component generateTopListUI(AbstractTopList topList, int page, Player player) {
         TextComponent.Builder builder = Component.text();
 
+        // 名次页数偏移量
         int pageNum = page * Config.getPageSize();
+        int playerRank = topList.getPlayerRank(player);
+
+        // 格式化当前玩家排行
+        PlayerData currentPlayerData = topList.getDataByPlayer(player);
+        Component currentListItem = UIConfig.get(UIComponent.CURRENT_ITEM)
+                .replaceText(config -> config.match(Config.getUIReplacePattern())
+                        .replacement((matchResult, textBuilder) -> {
+                            String key = matchResult.group();
+                            return switch (key) {
+                                case "{num}" -> Component.text(String.valueOf(playerRank));
+                                case "{playerName}" -> Component.text(player.getName());
+                                case "{count}" -> Component.text(currentPlayerData.getCount());
+                                default -> Component.text(key);
+                            };
+                        })
+                );
 
         // 添加头部
         builder.append(UIConfig.get(UIComponent.HEADER))
                 .appendNewline()
                 .appendNewline();
+
+        // 排名在前显示榜首
+        if (currentPlayerData != null && playerRank != -1 && playerRank < pageNum) {
+            builder.append(currentListItem).appendNewline();
+        }
 
         // 排行榜项目
         List<PlayerData> pageList = PageMgr.getListContentAt(topList.getDataList(), page);
@@ -73,7 +95,7 @@ public class UI {
                             .replacement((matchResult, textBuilder) -> {
                                 String key = matchResult.group();
                                 return switch (key) {
-                                    case "{num}" -> Component.text(String.valueOf(num+pageNum));
+                                    case "{num}" -> Component.text(String.valueOf(num + pageNum));
                                     case "{playerName}" -> Component.text(playerName != null ? playerName : "null");
                                     case "{count}" -> Component.text(topList.getFormattedData(playerData));
                                     default -> Component.text(key);
@@ -82,6 +104,11 @@ public class UI {
                     );
 
             builder.append(listItem).appendNewline();
+        }
+
+        // 排名在后显示榜尾
+        if (currentPlayerData != null && playerRank != -1 && playerRank > pageNum + Config.getPageSize()) {
+            builder.append(currentListItem).appendNewline();
         }
 
         // 尾部

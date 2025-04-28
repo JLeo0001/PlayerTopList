@@ -56,7 +56,7 @@ public abstract class AbstractTopList {
         }
 */
         dataList.clear();
-        for (OfflinePlayer player : Bukkit.getOfflinePlayers()){
+        for (OfflinePlayer player : Bukkit.getOfflinePlayers()) {
             dataList.add(new PlayerData(player));
         }
 
@@ -75,7 +75,7 @@ public abstract class AbstractTopList {
     public int getPlayerRank(OfflinePlayer player) {
         PlayerData playerData = getDataByPlayer(player);
 
-        if (playerData == null) return 0;
+        if (playerData == null) return -1;
         else return dataList.indexOf(getDataByPlayer(player)) + 1;
     }
 

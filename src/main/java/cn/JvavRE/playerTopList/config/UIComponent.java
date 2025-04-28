@@ -9,6 +9,7 @@ public enum UIComponent {
     PREV_BUTTON("prev-button", "<hover:show_text:'上一页'><dark_aqua> <- </dark_aqua></hover>"),
     NEXT_BUTTON("next-button", "<hover:show_text:'下一页'><dark_aqua> -> </dark_aqua></hover>"),
     ITEM("item", "<gray>⬡</gray> <white>{num}. <green>{playerName} <grey>{spacer}</grey> {count}</green></white>"),
+    CURRENT_ITEM("current-item", "<purple>⬡</purple> <yellow>{num}. <green>{playerName} <grey>{spacer}</grey> {count}</green></white>"),
     MAIN_UI("you-should-not-use-this", "this-will-generate-on-default"),
     ;
 

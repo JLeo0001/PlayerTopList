@@ -79,7 +79,7 @@ public class UI {
                 .appendNewline();
 
         // 排名在前显示榜首
-        if (currentPlayerData != null && playerRank != -1 && playerRank < pageNum) {
+        if (currentPlayerData != null && playerRank != -1 && playerRank <= pageNum) {
             builder.append(currentListItem).appendNewline();
         }
 
@@ -107,7 +107,7 @@ public class UI {
         }
 
         // 排名在后显示榜尾
-        if (currentPlayerData != null && playerRank != -1 && playerRank >= pageNum + Config.getPageSize()) {
+        if (currentPlayerData != null && playerRank != -1 && playerRank > pageNum + Config.getPageSize()) {
             builder.append(currentListItem).appendNewline();
         }
 

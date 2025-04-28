@@ -54,6 +54,8 @@ public class UI {
     private static Component generateTopListUI(AbstractTopList topList, int page) {
         TextComponent.Builder builder = Component.text();
 
+        int pageNum = page * Config.getPageSize();
+
         // 添加头部
         builder.append(UIConfig.get(UIComponent.HEADER))
                 .appendNewline()
@@ -71,7 +73,7 @@ public class UI {
                             .replacement((matchResult, textBuilder) -> {
                                 String key = matchResult.group();
                                 return switch (key) {
-                                    case "{num}" -> Component.text(String.valueOf(num));
+                                    case "{num}" -> Component.text(String.valueOf(num+pageNum));
                                     case "{playerName}" -> Component.text(playerName != null ? playerName : "null");
                                     case "{count}" -> Component.text(topList.getFormattedData(playerData));
                                     default -> Component.text(key);

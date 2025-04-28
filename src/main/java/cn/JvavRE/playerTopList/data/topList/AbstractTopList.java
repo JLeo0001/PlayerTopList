@@ -42,6 +42,7 @@ public abstract class AbstractTopList {
     public abstract void updatePlayerData();
 
     public void updateDataList() {
+/*
         List<OfflinePlayer> players = Arrays.stream(Bukkit.getOfflinePlayers()).toList();
 
         // 检查是否存在新玩家, 不需要每次都刷新dataList
@@ -52,6 +53,11 @@ public abstract class AbstractTopList {
             for (OfflinePlayer player : newPlayers) {
                 dataList.add(new PlayerData(player));
             }
+        }
+*/
+        dataList.clear();
+        for (OfflinePlayer player : Bukkit.getOfflinePlayers()){
+            dataList.add(new PlayerData(player));
         }
 
         updatePlayerData();

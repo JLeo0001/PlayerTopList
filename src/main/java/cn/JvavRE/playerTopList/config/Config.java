@@ -3,6 +3,7 @@ package cn.JvavRE.playerTopList.config;
 import cn.JvavRE.playerTopList.PlayerTopList;
 
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class Config {
@@ -15,6 +16,8 @@ public class Config {
     private static int pageSize;
     private static int updateInterval;
     private static boolean debugOutput;
+    private static Pattern playerExcludedNamePattern;
+    private static List<String> playerNameBlackList;
 
     public static void init() {
         loadConfig();
@@ -26,6 +29,14 @@ public class Config {
         pageSize = plugin.getConfig().getInt("page-size", 10);
         updateInterval = plugin.getConfig().getInt("update-interval", 60);
         debugOutput = plugin.getConfig().getBoolean("debug-output", false);
+        playerNameBlackList = plugin.getConfig().getStringList("player-name-black-list");
+        String playerExcludedNamePatternString = plugin.getConfig().getString("player-excluded-name-pattern", "-");
+        try {
+            playerExcludedNamePattern = Pattern.compile(playerExcludedNamePatternString);
+        } catch (Exception e) {
+            playerExcludedNamePattern = Pattern.compile("-");
+            plugin.getLogger().warning("正则表达式出现错误, 已重置为默认值");
+        }
 
         UIConfig.loadConfig(plugin.getConfig().getConfigurationSection("ui"));
         TopListLoader.loadTopLists(plugin.getConfig().getConfigurationSection("lists"));
@@ -67,5 +78,13 @@ public class Config {
 
     public static boolean isDebugOutput() {
         return debugOutput;
+    }
+
+    public static List<String> getPlayerNameBlackList() {
+        return playerNameBlackList;
+    }
+
+    public static Pattern getPlayerExcludedNamePattern() {
+        return playerExcludedNamePattern;
     }
 }

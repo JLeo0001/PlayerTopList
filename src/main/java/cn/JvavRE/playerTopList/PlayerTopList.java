@@ -23,7 +23,7 @@ public final class PlayerTopList extends JavaPlugin {
         if (Config.isPapiEnabled()) {
             getLogger().info("检测到 PlaceholderAPI, 启用相关功能");
             new PTLExpansion().register();
-        }else {
+        } else {
             getLogger().warning("未检测到 PlaceholderAPI, 相关功能将无法使用");
         }
 

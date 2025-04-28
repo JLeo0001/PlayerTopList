@@ -42,16 +42,14 @@ public abstract class AbstractTopList {
     public abstract void updatePlayerData();
 
     public void updateDataList() {
-        List<OfflinePlayer> players = Arrays.stream(Bukkit.getOfflinePlayers()).toList();
+        dataList.clear();
+        for (OfflinePlayer player : Bukkit.getOfflinePlayers()) {
+            String playerName = player.getName();
+            if (playerName == null) continue;
+            if (Config.getBlackList().contains(playerName)) continue;
+            if (Config.getExcludedRegex().matcher(playerName).matches()) continue;
 
-        // 检查是否存在新玩家, 不需要每次都刷新dataList
-        if (dataList.size() != players.size()) {
-            List<OfflinePlayer> oldPlayers = dataList.stream().map(PlayerData::getPlayer).toList();
-
-            List<OfflinePlayer> newPlayers = players.stream().filter(player -> !oldPlayers.contains(player)).toList();
-            for (OfflinePlayer player : newPlayers) {
-                dataList.add(new PlayerData(player));
-            }
+            dataList.add(new PlayerData(player));
         }
 
         updatePlayerData();
@@ -69,7 +67,7 @@ public abstract class AbstractTopList {
     public int getPlayerRank(OfflinePlayer player) {
         PlayerData playerData = getDataByPlayer(player);
 
-        if (playerData == null) return 0;
+        if (playerData == null) return -1;
         else return dataList.indexOf(getDataByPlayer(player)) + 1;
     }
 

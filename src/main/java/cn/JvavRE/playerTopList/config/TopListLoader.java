@@ -2,8 +2,10 @@ package cn.JvavRE.playerTopList.config;
 
 import cn.JvavRE.playerTopList.PlayerTopList;
 import cn.JvavRE.playerTopList.data.ListsMgr;
+import cn.JvavRE.playerTopList.data.topList.CommonStatisticTopList;
+import cn.JvavRE.playerTopList.data.topList.EntityTypeStatisticTopList;
+import cn.JvavRE.playerTopList.data.topList.MaterialStatisticTopList;
 import cn.JvavRE.playerTopList.data.topList.PlaceHolderTopList;
-import cn.JvavRE.playerTopList.data.topList.StatisticTopList;
 import cn.JvavRE.playerTopList.utils.SubStatistic;
 import cn.JvavRE.playerTopList.utils.TagStatistic;
 import net.kyori.adventure.text.format.TextColor;
@@ -16,7 +18,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.Plugin;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -84,35 +85,47 @@ public class TopListLoader {
         Expression exp = getExpression(expressionString);
 
         // 根据类型处理子参数列表
-        List<?> subArgs = switch (statistic.getType()) {
-            case ENTITY -> getSubArgStream(
-                    EntityType.class,
-                    entityNames,
-                    "alive",
-                    SubStatistic::getEntities,
-                    TagStatistic::getEntitiesFromTag
-            ).toList();
+        switch (statistic.getType()) {
+            case ENTITY -> {
+                List<EntityType> subArgs = getSubArgStream(
+                        EntityType.class,
+                        entityNames,
+                        "alive",
+                        SubStatistic::getEntities,
+                        TagStatistic::getEntitiesFromTag
+                ).toList();
 
-            case ITEM -> getSubArgStream(
-                    Material.class,
-                    materialNames,
-                    "items",
-                    SubStatistic::getMaterials,
-                    TagStatistic::getItemsFromTag
-            ).filter(Material::isItem).toList();
+                ListsMgr.addNewList(new EntityTypeStatisticTopList(name, color, hidden, reversed, exp, formater, statistic, subArgs));
+            }
 
-            case BLOCK -> getSubArgStream(
-                    Material.class,
-                    materialNames,
-                    "blocks",
-                    SubStatistic::getMaterials,
-                    TagStatistic::getBlocksFromTag
-            ).filter(Material::isBlock).toList();
+            case ITEM -> {
+                List<Material> subArgs = getSubArgStream(
+                        Material.class,
+                        materialNames,
+                        "items",
+                        SubStatistic::getMaterials,
+                        TagStatistic::getItemsFromTag
+                ).filter(Material::isItem).toList();
 
-            default -> new ArrayList<Material>();
-        };
+                ListsMgr.addNewList(new MaterialStatisticTopList(name, color, hidden, reversed, exp, formater, statistic, subArgs));
+            }
 
-        ListsMgr.addNewList(new StatisticTopList(name, color, hidden, reversed, exp, formater, statistic, subArgs));
+            case BLOCK -> {
+                List<Material> subArgs = getSubArgStream(
+                        Material.class,
+                        materialNames,
+                        "blocks",
+                        SubStatistic::getMaterials,
+                        TagStatistic::getBlocksFromTag
+                ).filter(Material::isBlock).toList();
+
+                ListsMgr.addNewList(new MaterialStatisticTopList(name, color, hidden, reversed, exp, formater, statistic, subArgs));
+            }
+
+            case UNTYPED ->
+                    ListsMgr.addNewList(new CommonStatisticTopList(name, color, hidden, reversed, exp, formater, statistic));
+        }
+
         plugin.getLogger().info("成功添加列表: " + name + " (" + typeName + ")");
     }
 

@@ -8,8 +8,8 @@ public enum UIComponent {
     FOOTER("footer", "<aqua>{prevButton}当前: (<white>{currentIndex}</white>/<white>{totalIndex}</white>){nextButton}</aqua>"),
     PREV_BUTTON("prev-button", "<hover:show_text:'上一页'><dark_aqua> <- </dark_aqua></hover>"),
     NEXT_BUTTON("next-button", "<hover:show_text:'下一页'><dark_aqua> -> </dark_aqua></hover>"),
-    ITEM("item", "<gray>⬡</gray> <white>{num}. <green>{playerName} <grey>{spacer}</grey> {count}</green></white>"),
-    CURRENT_ITEM("current-item", "<purple>⬡</purple> <yellow>{num}. <green>{playerName} <grey>{spacer}</grey> {count}</green></white>"),
+    ITEM("item", "<gray>⬡</gray> <white>{num}. <green>{playerName}</green> <grey>-</grey> <dark_green>{count}</dark_green></white>"),
+    CURRENT_ITEM("current-item", "<light_purple>⬡</light_purple> <yellow>{num}. <green>{playerName}</green> <grey>-</grey> <dark_green>{count}</dark_green></yellow>"),
     MAIN_UI("you-should-not-use-this", "this-will-generate-on-default"),
     ;
 

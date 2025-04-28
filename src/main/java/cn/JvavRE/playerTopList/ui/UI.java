@@ -55,7 +55,7 @@ public class UI {
         TextComponent.Builder builder = Component.text();
 
         // 名次页数偏移量
-        int pageNum = page * Config.getPageSize();
+        int pageNum = (page - 1) * Config.getPageSize();
         int playerRank = topList.getPlayerRank(player);
 
         // 格式化当前玩家排行
@@ -67,7 +67,7 @@ public class UI {
                             return switch (key) {
                                 case "{num}" -> Component.text(String.valueOf(playerRank));
                                 case "{playerName}" -> Component.text(player.getName());
-                                case "{count}" -> Component.text(currentPlayerData.getCount());
+                                case "{count}" -> Component.text(topList.getFormattedData(currentPlayerData));
                                 default -> Component.text(key);
                             };
                         })
@@ -107,7 +107,7 @@ public class UI {
         }
 
         // 排名在后显示榜尾
-        if (currentPlayerData != null && playerRank != -1 && playerRank > pageNum + Config.getPageSize()) {
+        if (currentPlayerData != null && playerRank != -1 && playerRank >= pageNum + Config.getPageSize()) {
             builder.append(currentListItem).appendNewline();
         }
 

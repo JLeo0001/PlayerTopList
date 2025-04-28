@@ -56,11 +56,13 @@ public class UI {
 
         // 名次页数偏移量
         int pageNum = (page - 1) * Config.getPageSize();
+
         int playerRank = topList.getPlayerRank(player);
+        PlayerData currentPlayerData = topList.getDataByPlayer(player);
+        Component currentListItem = null;
 
         // 格式化当前玩家排行
-        PlayerData currentPlayerData = topList.getDataByPlayer(player);
-        Component currentListItem = UIConfig.get(UIComponent.CURRENT_ITEM)
+        if (currentPlayerData != null) currentListItem = UIConfig.get(UIComponent.CURRENT_ITEM)
                 .replaceText(config -> config.match(Config.getUIReplacePattern())
                         .replacement((matchResult, textBuilder) -> {
                             String key = matchResult.group();
@@ -73,13 +75,14 @@ public class UI {
                         })
                 );
 
+
         // 添加头部
         builder.append(UIConfig.get(UIComponent.HEADER))
                 .appendNewline()
                 .appendNewline();
 
         // 排名在前显示榜首
-        if (currentPlayerData != null && playerRank != -1 && playerRank <= pageNum) {
+        if (currentPlayerData != null && playerRank <= pageNum) {
             builder.append(currentListItem).appendNewline();
         }
 
@@ -107,7 +110,7 @@ public class UI {
         }
 
         // 排名在后显示榜尾
-        if (currentPlayerData != null && playerRank != -1 && playerRank > pageNum + Config.getPageSize()) {
+        if (currentPlayerData != null && playerRank > pageNum + Config.getPageSize()) {
             builder.append(currentListItem).appendNewline();
         }
 

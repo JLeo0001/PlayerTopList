@@ -16,8 +16,8 @@ public class Config {
     private static int pageSize;
     private static int updateInterval;
     private static boolean debugOutput;
-    private static Pattern playerExcludedNamePattern;
-    private static List<String> playerNameBlackList;
+    private static Pattern excludedRegex;
+    private static List<String> blackList;
 
     public static void init() {
         loadConfig();
@@ -29,12 +29,13 @@ public class Config {
         pageSize = plugin.getConfig().getInt("page-size", 10);
         updateInterval = plugin.getConfig().getInt("update-interval", 60);
         debugOutput = plugin.getConfig().getBoolean("debug-output", false);
-        playerNameBlackList = plugin.getConfig().getStringList("player-name-black-list");
-        String playerExcludedNamePatternString = plugin.getConfig().getString("player-excluded-name-pattern", "-");
+        blackList = plugin.getConfig().getStringList("blacklist");
+        String excludedRegexString = plugin.getConfig().getString("exclude-regex", "-");
+
         try {
-            playerExcludedNamePattern = Pattern.compile(playerExcludedNamePatternString);
+            excludedRegex = Pattern.compile(excludedRegexString);
         } catch (Exception e) {
-            playerExcludedNamePattern = Pattern.compile("-");
+            excludedRegex = Pattern.compile("-");
             plugin.getLogger().warning("正则表达式出现错误, 已重置为默认值");
         }
 
@@ -80,11 +81,11 @@ public class Config {
         return debugOutput;
     }
 
-    public static List<String> getPlayerNameBlackList() {
-        return playerNameBlackList;
+    public static List<String> getBlackList() {
+        return blackList;
     }
 
-    public static Pattern getPlayerExcludedNamePattern() {
-        return playerExcludedNamePattern;
+    public static Pattern getExcludedRegex() {
+        return excludedRegex;
     }
 }

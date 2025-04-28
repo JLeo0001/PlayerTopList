@@ -46,8 +46,8 @@ public abstract class AbstractTopList {
         for (OfflinePlayer player : Bukkit.getOfflinePlayers()) {
             String playerName = player.getName();
             if (playerName == null) continue;
-            if (Config.getPlayerNameBlackList().contains(playerName)) continue;
-            if (Config.getPlayerExcludedNamePattern().matcher(playerName).matches()) continue;
+            if (Config.getBlackList().contains(playerName)) continue;
+            if (Config.getExcludedRegex().matcher(playerName).matches()) continue;
 
             dataList.add(new PlayerData(player));
         }

@@ -4,6 +4,13 @@ page-size: 10
 # 排行榜更新间隔(单位为秒)(不小于30)
 update-interval: 60
 
+# 黑名单玩家
+blacklist:
+  - "whhhh"
+
+# 排除玩家名正则表达式
+exclude-regex: "-"
+
 # 自定义UI部分
 ui:
   header: "<bold>================ <hover:show_text:'<yellow>更新时间: <#FFA500>{updateTime}</#FFA500></yellow>'>{listName} ================</bold>"
@@ -11,6 +18,7 @@ ui:
   prev-button: "<hover:show_text:'上一页'><dark_aqua> <- </dark_aqua></hover>"
   next-button: "<hover:show_text:'下一页'><dark_aqua> -> </dark_aqua></hover>"
   item: "<gray>⬡</gray> <white>{num}. <green>{playerName}</green> <grey>-</grey> <dark_green>{count}</dark_green></white>"
+  current-item: "<light_purple>⬡</light_purple> <yellow>{num}. <green>{playerName}</green> <grey>-</grey> <dark_green>{count}</dark_green></yellow>"
 
 # 排行榜部分
 lists:

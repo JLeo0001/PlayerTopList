@@ -10,6 +10,7 @@ import org.bukkit.OfflinePlayer;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public abstract class AbstractTopList {
     protected final String name;
@@ -42,14 +43,22 @@ public abstract class AbstractTopList {
     public abstract void updatePlayerData();
 
     public void updateDataList() {
-        dataList.clear();
-        for (OfflinePlayer player : Bukkit.getOfflinePlayers()) {
-            String playerName = player.getName();
-            if (playerName == null) continue;
-            if (Config.getBlackList().contains(playerName)) continue;
-            if (Config.getExcludedRegex().matcher(playerName).matches()) continue;
+        List<OfflinePlayer> joinedPlayers = Arrays.stream(Bukkit.getOfflinePlayers()).toList();
+        Set<UUID> currentUUIDs = dataList.stream().map(pd -> pd.getPlayer().getUniqueId()).collect(Collectors.toSet());
 
-            dataList.add(new PlayerData(player));
+        // 检查是否存在新玩家, 不需要每次都刷新dataList
+        if (dataList.size() != joinedPlayers.size()) {
+            for (OfflinePlayer joinedPlayer : joinedPlayers) {
+                if (currentUUIDs.contains(joinedPlayer.getUniqueId())) continue;
+
+                // 黑名单控制
+                String newPlayerName = joinedPlayer.getName();
+                if (newPlayerName == null) continue;
+                if (Config.getBlackList().contains(newPlayerName)) continue;
+                if (Config.getExcludedRegex().matcher(newPlayerName).matches()) continue;
+
+                dataList.add(new PlayerData(joinedPlayer));
+            }
         }
 
         updatePlayerData();
@@ -67,7 +76,7 @@ public abstract class AbstractTopList {
     public int getPlayerRank(OfflinePlayer player) {
         PlayerData playerData = getDataByPlayer(player);
 
-        if (playerData == null) return -1;
+        if (playerData == null) return 0;
         else return dataList.indexOf(getDataByPlayer(player)) + 1;
     }
 

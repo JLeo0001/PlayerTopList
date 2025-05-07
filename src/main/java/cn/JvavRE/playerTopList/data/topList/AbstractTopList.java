@@ -50,6 +50,8 @@ public abstract class AbstractTopList {
         if (dataList.size() != joinedPlayers.size()) {
             for (OfflinePlayer joinedPlayer : joinedPlayers) {
                 if (currentUUIDs.contains(joinedPlayer.getUniqueId())) continue;
+                if (Config.uuidFilterEnabled() && (Bukkit.getOnlineMode() != (joinedPlayer.getUniqueId().version() == 4)))
+                    continue;
 
                 // 黑名单控制
                 String newPlayerName = joinedPlayer.getName();

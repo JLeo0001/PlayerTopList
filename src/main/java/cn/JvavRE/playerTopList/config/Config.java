@@ -16,6 +16,7 @@ public class Config {
     private static int pageSize;
     private static int updateInterval;
     private static boolean debugOutput;
+    private static boolean uuidFilter;
     private static Pattern excludedRegex;
     private static List<String> blackList;
     private static double updateOfflineChance;
@@ -31,6 +32,7 @@ public class Config {
         updateInterval = plugin.getConfig().getInt("update-interval", 60);
         debugOutput = plugin.getConfig().getBoolean("debug-output", false);
         blackList = plugin.getConfig().getStringList("blacklist");
+        uuidFilter = plugin.getConfig().getBoolean("uuid-filter", false);
         updateOfflineChance = plugin.getConfig().getDouble("update-offline-chance", 1.0);
 
         String excludedRegexString = plugin.getConfig().getString("exclude-regex", "-");
@@ -94,5 +96,9 @@ public class Config {
 
     public static double getUpdateOfflineChance() {
         return updateOfflineChance;
+    }
+
+    public static boolean uuidFilterEnabled() {
+        return uuidFilter;
     }
 }

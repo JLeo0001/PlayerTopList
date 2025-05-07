@@ -17,6 +17,13 @@ exclude-regex: "-"
 # 值越小则不在线玩家更新概率越小, 占用更小
 update-offline-chance: 0.5
 
+# 开启正版/离线UUID过滤
+# 开启后正版服将不会显示离线登陆的玩家
+# 离线服将不会显示正版登录的玩家
+# 如果你的服务器遇到排行榜玩家重复的问题(开关过正版验证, 或者vc等代理配置问题)
+# 开启这个选项可能修复
+uuid-filter: false
+
 # 自定义UI部分
 ui:
   header: "<bold>================ <hover:show_text:'<yellow>更新时间: <#FFA500>{updateTime}</#FFA500></yellow>'>{listName} ================</bold>"

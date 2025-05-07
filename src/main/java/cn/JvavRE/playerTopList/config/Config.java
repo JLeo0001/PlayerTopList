@@ -18,6 +18,7 @@ public class Config {
     private static boolean debugOutput;
     private static Pattern excludedRegex;
     private static List<String> blackList;
+    private static double updateOfflineChance;
 
     public static void init() {
         loadConfig();
@@ -30,8 +31,9 @@ public class Config {
         updateInterval = plugin.getConfig().getInt("update-interval", 60);
         debugOutput = plugin.getConfig().getBoolean("debug-output", false);
         blackList = plugin.getConfig().getStringList("blacklist");
-        String excludedRegexString = plugin.getConfig().getString("exclude-regex", "-");
+        updateOfflineChance = plugin.getConfig().getDouble("update-offline-chance", 1.0);
 
+        String excludedRegexString = plugin.getConfig().getString("exclude-regex", "-");
         try {
             excludedRegex = Pattern.compile(excludedRegexString);
         } catch (Exception e) {
@@ -39,11 +41,12 @@ public class Config {
             plugin.getLogger().warning("正则表达式出现错误, 已重置为默认值");
         }
 
-        UIConfig.loadConfig(plugin.getConfig().getConfigurationSection("ui"));
-        TopListLoader.loadTopLists(plugin.getConfig().getConfigurationSection("lists"));
-
         pageSize = Math.max(pageSize, 1);
         updateInterval = Math.max(updateInterval, 30);
+        updateOfflineChance = Math.min(Math.max(updateOfflineChance, 0.0), 1.0);
+
+        UIConfig.loadConfig(plugin.getConfig().getConfigurationSection("ui"));
+        TopListLoader.loadTopLists(plugin.getConfig().getConfigurationSection("lists"));
 
         plugin.getLogger().info("配置加载完成");
     }
@@ -87,5 +90,9 @@ public class Config {
 
     public static Pattern getExcludedRegex() {
         return excludedRegex;
+    }
+
+    public static double getUpdateOfflineChance() {
+        return updateOfflineChance;
     }
 }

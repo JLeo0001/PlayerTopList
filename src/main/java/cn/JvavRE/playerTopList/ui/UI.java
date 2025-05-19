@@ -87,7 +87,7 @@ public class UI {
         }
 
         // 排行榜项目
-        List<PlayerData> pageList = PageMgr.getListContentAt(topList.getDataList(), page);
+        List<PlayerData> pageList = PageMgr.getListContentAt(topList.getDataList(), Config.getPageSize(), page);
         for (int i = 0; i < pageList.size(); i++) {
             PlayerData playerData = pageList.get(i);
             String playerName = playerData.getPlayer().getName();
@@ -123,7 +123,7 @@ public class UI {
         Component prevButton = UIConfig.get(UIComponent.PREV_BUTTON)
                 .clickEvent(ClickEvent.runCommand("/ptl show " + topList.getName() + " " + (page - 1)));
 
-        int totalPages = PageMgr.getTotalPages(topList.getDataList());
+        int totalPages = PageMgr.getTotalPages(topList.getDataList(), Config.getPageSize());
 
         // 变量替换
         return builder.build().replaceText(config -> config.match(Config.getUIReplacePattern())

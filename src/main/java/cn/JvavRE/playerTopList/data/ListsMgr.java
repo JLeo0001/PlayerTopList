@@ -52,4 +52,8 @@ public class ListsMgr {
     public static AbstractTopList getListByName(String name) {
         return topLists.stream().filter(topList -> topList.getName().equals(name)).findFirst().orElse(null);
     }
+
+    public static List<AbstractTopList> getTopLists() {
+        return topLists;
+    }
 }

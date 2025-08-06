@@ -24,6 +24,9 @@ update-offline-chance: 0.5
 # 开启这个选项可能修复
 uuid-filter: false
 
+# 是否在后台输出调试信息
+debug-output: false
+
 # 自定义UI部分
 ui:
   header: "<bold>================ <hover:show_text:'<yellow>更新时间: <#FFA500>{updateTime}</#FFA500></yellow>'>{listName} ================</bold>"
@@ -35,49 +38,22 @@ ui:
 
 # 排行榜部分
 lists:
-  #示例:
-  #这个是排行榜名称
+  # 财富榜示例 (需要Vault和经济插件)
+  财富榜:
+    color: "#E1A124"
+    type: VAULT_BALANCE # 特殊类型
+    formatter: "%.2f 元" # 显示两位小数，并加上单位“元”
+
   挖掘总榜:
-    # (可选) 这个是排行榜显示颜色
     color: "#FFA500"
-
-    # (必填) 这个是统计数据类型, 可用值见附录1
-    # 也可以使用place holder, 具体使用方法见下方跑图榜
     type: MINE_BLOCK
-
-    # (选择性必填) 当类型为Statistic.Type.BLOCK或者Statistic.Type.ITEM时必填
-    # 除了材料名称外可用值: all, items, blocks, solid
-    # 支持使用标签, 见附录4
-    # 其他可用值见附录2
-    # 注意!!!该项为列表类型
     material: [solid]
-
-    # (选择性必填) 当类型为Statistic.Type.ENTITY时必填
-    # 除了实体名称外可用值: all, alive
-    # 支持使用标签, 见附录4
-    # 其他可用值见附录3
-    # 注意!!!该项为列表类型
-    entity: [all]
-
-    # (选填) 是否隐藏
-    hidden: false
-
-    # (选填) 数值表达式:
-    # 用于修正排行榜数值
     expression: "count / 64"
-
-    # (选填) 数字格式:
-    # java格式化字符串
     formatter: "%.1f 组"
-
-    # (选填) 排序:
-    # false: 从大到小
-    # true: 从小到大
-    reversed: false
 
   总榜:
     color: "#FB156B"
-    type: "%ptl_player_rank_sum_挖掘总榜_放置榜_挖矿榜_跑图榜_击杀总榜_击杀玩家榜_死亡榜_钓鱼榜_附魔榜_合成榜_交易榜_在线时间%"
+    type: "%ptl_player_rank_sum_挖掘总榜_放置榜_挖矿榜_跑图榜_击杀总榜_击杀玩家榜_死亡榜_钓鱼榜_附魔榜_合成榜_交易榜_在线时间_财富榜%"
     reversed: true
     formatter: "%.0f 排名和"
 
@@ -150,9 +126,3 @@ lists:
   飞行榜:
     hidden: true
     type: AVIATE_ONE_CM
-
-# 附录
-# 1.可用统计类型见: https://bukkit.windit.net/javadoc/org/bukkit/Statistic.html
-# 2.可用材料类型见: https://bukkit.windit.net/javadoc/org/bukkit/Material.html
-# 3.可用实体类型见: https://bukkit.windit.net/javadoc/org/bukkit/entity/EntityType.html
-# 4.可用标签及对应材料见: https://zh.minecraft.wiki/w/%E6%A0%87%E7%AD%BE?variant=zh-cn#%E6%A0%87%E7%AD%BE%E5%88%97%E8%A1%A8

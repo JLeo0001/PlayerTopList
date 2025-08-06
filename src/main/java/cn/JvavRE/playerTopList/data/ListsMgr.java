@@ -2,6 +2,7 @@ package cn.JvavRE.playerTopList.data;
 
 import cn.JvavRE.playerTopList.PlayerTopList;
 import cn.JvavRE.playerTopList.config.Config;
+import cn.JvavRE.playerTopList.config.TopListLoader;
 import cn.JvavRE.playerTopList.data.topList.AbstractTopList;
 import cn.JvavRE.playerTopList.ui.UI;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
@@ -18,24 +19,37 @@ public class ListsMgr {
 
     public static void init() {
         topLists = new ArrayList<>();
+        // 从配置文件加载排行榜
+        TopListLoader.loadTopLists(plugin.getConfig().getConfigurationSection("lists"));
+    }
+
+    public static void updateAllListsOnce() {
+        // 异步执行，避免阻塞服务器启动
+        Bukkit.getAsyncScheduler().runNow(plugin, (task) -> {
+            topLists.forEach(AbstractTopList::updateDataList);
+            plugin.getLogger().info("首次排行榜数据更新完成");
+        });
     }
 
     public static void startTask() {
-        // 运行更新任务
+        // 首次延迟和后续周期都使用配置的间隔
+        long interval = Config.getUpdateInterval();
         updateTask = Bukkit.getAsyncScheduler().runAtFixedRate(
                 plugin,
                 task -> {
                     topLists.forEach(AbstractTopList::updateDataList);
                     if (Config.isDebugOutput()) plugin.getLogger().info("排行榜已更新");
                 },
-                1,
-                Config.getUpdateInterval(),
+                interval, // 首次延迟
+                interval, // 后续周期
                 TimeUnit.SECONDS
         );
     }
 
     public static void reset() {
-        updateTask.cancel();
+        if (updateTask != null) {
+            updateTask.cancel();
+        }
         topLists.clear();
         UI.resetListsUI();
     }

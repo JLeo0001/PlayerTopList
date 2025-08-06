@@ -10,59 +10,74 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public final class PlayerTopList extends JavaPlugin {
     private static Economy econ = null;
+    private static PlayerTopList instance;
 
     public static PlayerTopList getInstance() {
-        return getPlugin(PlayerTopList.class);
+        return instance;
     }
 
     @Override
     public void onEnable() {
-        // Plugin startup logic
+        instance = this;
 
-        // 必须先初始化配置，才能知道PAPI是否启用
-        Config.init();
+        // 步骤 1: 保存默认配置, 让文件在磁盘上存在
+        saveDefaultConfig();
 
-        new Command();
+        // 步骤 2: 挂钩所有外部依赖 (Vault, PAPI)
+        // 这一步必须在加载任何需要它们的功能之前完成
+        setupEconomy();
+        setupPlaceholderAPI();
 
-        if (Config.isPapiEnabled()) {
-            getLogger().info("检测到 PlaceholderAPI, 启用相关功能");
-            new PTLExpansion().register();
-        } else {
-            getLogger().warning("未检测到 PlaceholderAPI, 相关功能将无法使用");
-        }
+        // 步骤 3: 从磁盘加载配置文件的值到内存中
+        Config.loadConfigValues();
 
-        if (setupEconomy()) {
-            getLogger().info("检测到 Vault, 已成功挂钩经济功能");
-        } else {
-            getLogger().warning("未检测到 Vault 或经济插件, 财富榜将无法使用");
-        }
-
-        // 加载所有排行榜
+        // 步骤 4: 初始化排行榜管理器。
+        // 它会创建列表，然后调用 TopListLoader 加载所有排行榜
         ListsMgr.init();
 
-        // 首次全量更新
+        // 步骤 5: 注册指令
+        new Command();
+
+        // 步骤 6: 启动后台任务
+        // 立即异步执行一次数据更新, 然后开启定时任务
         getLogger().info("正在执行首次排行榜数据更新...");
         ListsMgr.updateAllListsOnce();
-
-        // 开启定时更新任务
         ListsMgr.startTask();
+
+        getLogger().info("PlayerTopList 插件已成功启用。");
     }
 
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+        getLogger().info("PlayerTopList 插件已卸载。");
     }
 
-    private boolean setupEconomy() {
+    private void setupEconomy() {
         if (getServer().getPluginManager().getPlugin("Vault") == null) {
-            return false;
+            getLogger().warning("未找到 Vault, 财富榜功能将无法使用。");
+            return;
         }
         RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
         if (rsp == null) {
-            return false;
+            getLogger().warning("未找到经济插件 (如 EssentialsX), 财富榜功能将无法使用。");
+            return;
         }
         econ = rsp.getProvider();
-        return econ != null;
+        if (econ != null) {
+            getLogger().info("已成功挂钩 Vault 经济功能。");
+        } else {
+            getLogger().warning("挂钩 Vault 失败，财富榜功能将无法使用。");
+        }
+    }
+
+    private void setupPlaceholderAPI() {
+        if (getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            getLogger().info("检测到 PlaceholderAPI, 启用相关功能。");
+            new PTLExpansion().register();
+        } else {
+            getLogger().warning("未检测到 PlaceholderAPI, 相关功能将无法使用。");
+        }
     }
 
     public static Economy getEconomy() {

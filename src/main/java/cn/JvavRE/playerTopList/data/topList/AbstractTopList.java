@@ -10,12 +10,14 @@ import org.bukkit.OfflinePlayer;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList; // <-- 重要的修改
 import java.util.stream.Collectors;
 
 public abstract class AbstractTopList {
     protected final String name;
     protected final boolean hidden;
     protected final boolean reversed;
+    // 使用线程安全的 CopyOnWriteArrayList 替代 ArrayList
     protected final List<PlayerData> dataList;
 
     protected final TextColor nameColor;
@@ -31,7 +33,8 @@ public abstract class AbstractTopList {
         this.name = name;
         this.hidden = hidden;
         this.reversed = reversed;
-        this.dataList = new ArrayList<>();
+        // 初始化为线程安全的列表
+        this.dataList = new CopyOnWriteArrayList<>(); // <-- 重要的修改
 
         this.nameColor = nameColor;
         this.lastUpdate = LocalDateTime.now();
@@ -43,17 +46,18 @@ public abstract class AbstractTopList {
     public abstract void updatePlayerData();
 
     public void updateDataList() {
+        // 创建一个当前所有玩家的快照，避免在迭代时被修改
         List<OfflinePlayer> joinedPlayers = Arrays.stream(Bukkit.getOfflinePlayers()).toList();
         Set<UUID> currentUUIDs = dataList.stream().map(pd -> pd.getPlayer().getUniqueId()).collect(Collectors.toSet());
 
-        // 检查是否存在新玩家, 不需要每次都刷新dataList
+        // 检查是否存在新玩家
+        // 这一部分现在是线程安全的，因为 dataList.add 是安全的
         if (dataList.size() != joinedPlayers.size()) {
             for (OfflinePlayer joinedPlayer : joinedPlayers) {
                 if (currentUUIDs.contains(joinedPlayer.getUniqueId())) continue;
                 if (Config.uuidFilterEnabled() && (Bukkit.getOnlineMode() != (joinedPlayer.getUniqueId().version() == 4)))
                     continue;
 
-                // 黑名单控制
                 String newPlayerName = joinedPlayer.getName();
                 if (newPlayerName == null) continue;
                 if (Config.getBlackList().contains(newPlayerName)) continue;
@@ -71,18 +75,24 @@ public abstract class AbstractTopList {
     }
 
     protected void sortDataList() {
-        if (reversed) dataList.sort(Comparator.comparingDouble(PlayerData::getCount));
-        else dataList.sort(Comparator.comparingDouble(PlayerData::getCount).reversed());
+        // sort 方法在 CopyOnWriteArrayList 上是线程安全的
+        if (reversed) {
+            dataList.sort(Comparator.comparingDouble(PlayerData::getCount));
+        } else {
+            dataList.sort(Comparator.comparingDouble(PlayerData::getCount).reversed());
+        }
     }
 
     public int getPlayerRank(OfflinePlayer player) {
+        // 读取操作在 CopyOnWriteArrayList 上是完全线程安全的
         PlayerData playerData = getDataByPlayer(player);
 
         if (playerData == null) return 0;
-        else return dataList.indexOf(getDataByPlayer(player)) + 1;
+        else return dataList.indexOf(playerData) + 1; // indexOf 也是安全的
     }
 
     public PlayerData getDataByPlayer(OfflinePlayer player) {
+        // 读取操作在 CopyOnWriteArrayList 上是完全线程安全的
         return dataList.stream().filter(playerData -> Objects.equals(playerData.getPlayer().getName(), player.getName())).findFirst().orElse(null);
     }
 

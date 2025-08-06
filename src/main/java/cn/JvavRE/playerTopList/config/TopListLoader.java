@@ -2,10 +2,7 @@ package cn.JvavRE.playerTopList.config;
 
 import cn.JvavRE.playerTopList.PlayerTopList;
 import cn.JvavRE.playerTopList.data.ListsMgr;
-import cn.JvavRE.playerTopList.data.topList.CommonStatisticTopList;
-import cn.JvavRE.playerTopList.data.topList.EntityTypeStatisticTopList;
-import cn.JvavRE.playerTopList.data.topList.MaterialStatisticTopList;
-import cn.JvavRE.playerTopList.data.topList.PlaceHolderTopList;
+import cn.JvavRE.playerTopList.data.topList.*;
 import cn.JvavRE.playerTopList.utils.SubStatistic;
 import cn.JvavRE.playerTopList.utils.TagStatistic;
 import net.kyori.adventure.text.format.TextColor;
@@ -27,7 +24,7 @@ import java.util.stream.Stream;
 public class TopListLoader {
     private static final Plugin plugin = PlayerTopList.getInstance();
 
-    protected static void loadTopLists(ConfigurationSection section) {
+    public static void loadTopLists(ConfigurationSection section) {
         if (section == null) return;
 
         // 遍历榜单项目
@@ -48,21 +45,37 @@ public class TopListLoader {
             // 检查名称
             if (!isName(name)) {
                 plugin.getLogger().warning("不是有效的列表名称: '" + name + "'");
-                return;
+                continue;
             }
 
             plugin.getLogger().info("正在加载列表: " + name);
 
-            // 两种列表分别注册
+            // 多种列表分别注册
             if (isStatistic(type)) {
                 addStatisticListToManager(name, nameColor, type, hidden, reversed, expressionString, formatter, material, entity);
             } else if (Config.isPapiEnabled() && isPlaceHolder(type)) {
                 addPlaceHolderListToManager(name, nameColor, type, hidden, reversed, expressionString, formatter);
+            } else if (type.equalsIgnoreCase("VAULT_BALANCE")) {
+                addVaultListToManager(name, nameColor, hidden, reversed, expressionString, formatter);
             } else {
                 plugin.getLogger().warning("不是有效的排行榜类型: '" + type + "'");
             }
         }
     }
+
+    private static void addVaultListToManager(String name, String colorName, boolean hidden, boolean reversed, String expressionString, String formatter) {
+        if (PlayerTopList.getEconomy() == null) {
+            plugin.getLogger().warning("无法加载财富榜 '" + name + "', 因为未找到 Vault 或经济插件。");
+            return;
+        }
+
+        TextColor color = getColor(colorName);
+        Expression exp = getExpression(expressionString);
+
+        ListsMgr.addNewList(new VaultTopList(name, color, hidden, reversed, exp, formatter));
+        plugin.getLogger().info("成功添加财富榜: " + name);
+    }
+
 
     private static void addPlaceHolderListToManager(String name, String colorName, String typeName,
                                                     boolean hidden, boolean reversed,

@@ -11,6 +11,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public final class PlayerTopList extends JavaPlugin {
     private static Economy econ = null;
     private static PlayerTopList instance;
+    private static boolean papiEnabled = false; // 新增字段
 
     public static PlayerTopList getInstance() {
         return instance;
@@ -24,22 +25,19 @@ public final class PlayerTopList extends JavaPlugin {
         saveDefaultConfig();
 
         // 步骤 2: 挂钩所有外部依赖 (Vault, PAPI)
-        // 这一步必须在加载任何需要它们的功能之前完成
         setupEconomy();
         setupPlaceholderAPI();
 
         // 步骤 3: 从磁盘加载配置文件的值到内存中
         Config.loadConfigValues();
 
-        // 步骤 4: 初始化排行榜管理器。
-        // 它会创建列表，然后调用 TopListLoader 加载所有排行榜
+        // 步骤 4: 初始化排行榜管理器
         ListsMgr.init();
 
         // 步骤 5: 注册指令
         new Command();
 
         // 步骤 6: 启动后台任务
-        // 立即异步执行一次数据更新, 然后开启定时任务
         getLogger().info("正在执行首次排行榜数据更新...");
         ListsMgr.updateAllListsOnce();
         ListsMgr.startTask();
@@ -49,7 +47,6 @@ public final class PlayerTopList extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
         getLogger().info("PlayerTopList 插件已卸载。");
     }
 
@@ -73,14 +70,21 @@ public final class PlayerTopList extends JavaPlugin {
 
     private void setupPlaceholderAPI() {
         if (getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            papiEnabled = true; // 设置为 true
             getLogger().info("检测到 PlaceholderAPI, 启用相关功能。");
             new PTLExpansion().register();
         } else {
+            papiEnabled = false; // 确保为 false
             getLogger().warning("未检测到 PlaceholderAPI, 相关功能将无法使用。");
         }
     }
 
     public static Economy getEconomy() {
         return econ;
+    }
+
+    // 新增的 Getter 方法，供 TopListLoader 调用
+    public static boolean isPapiEnabled() {
+        return papiEnabled;
     }
 }

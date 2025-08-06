@@ -9,6 +9,8 @@ import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
+
 public class PTLExpansion extends PlaceholderExpansion {
     @Override
     public @NotNull String getIdentifier() {
@@ -94,6 +96,44 @@ public class PTLExpansion extends PlaceholderExpansion {
             if (topList == null) return null;
 
             return jsonOutput.topList2Json(topList);
+        }
+
+        // ptl_top_rank_<listName>
+        if (params.startsWith("top_rank_")) {
+            String listName = params.substring(9);
+            AbstractTopList topList = ListsMgr.getListByName(listName);
+            if (topList == null) {
+                return "排行榜不存在";
+            }
+
+            List<PlayerData> dataList = topList.getDataList();
+            if (dataList.isEmpty()) {
+                return "排行榜暂无数据";
+            }
+
+            StringBuilder result = new StringBuilder();
+            int limit = Math.min(10, dataList.size());
+
+            for (int i = 0; i < limit; i++) {
+                PlayerData playerData = dataList.get(i);
+                String playerName = playerData.getPlayer().getName();
+                if (playerName == null) {
+                    playerName = "未知玩家";
+                }
+                String formattedCount = topList.getFormattedData(playerData);
+
+                result.append(i + 1)
+                        .append(". ")
+                        .append(playerName)
+                        .append(" - ")
+                        .append(formattedCount);
+
+                if (i < limit - 1) {
+                    result.append("\n");
+                }
+            }
+
+            return result.toString();
         }
 
         return null;

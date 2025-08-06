@@ -1,7 +1,6 @@
 package cn.JvavRE.playerTopList.config;
 
 import cn.JvavRE.playerTopList.PlayerTopList;
-
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -10,7 +9,6 @@ public class Config {
     private static final Pattern UIReplacePattern = Pattern.compile("\\{\\w+}");
     private static final Pattern listNamePattern = Pattern.compile("^[^_]+$");
     private static final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    private static final boolean isPapiEnabled = PlayerTopList.getInstance().getServer().getPluginManager().isPluginEnabled("PlaceholderAPI");
     private static final PlayerTopList plugin = PlayerTopList.getInstance();
 
     private static int pageSize;
@@ -21,12 +19,9 @@ public class Config {
     private static List<String> blackList;
     private static double updateOfflineChance;
 
-    public static void init() {
-        loadConfig();
-    }
-
-    private static void loadConfig() {
-        plugin.saveDefaultConfig();
+    // 这个方法只加载值，不执行任何其他操作
+    public static void loadConfigValues() {
+        plugin.reloadConfig(); // 确保加载的是最新配置
 
         pageSize = plugin.getConfig().getInt("page-size", 10);
         updateInterval = plugin.getConfig().getInt("update-interval", 60);
@@ -48,57 +43,24 @@ public class Config {
         updateOfflineChance = Math.min(Math.max(updateOfflineChance, 0.0), 1.0);
 
         UIConfig.loadConfig(plugin.getConfig().getConfigurationSection("ui"));
-        TopListLoader.loadTopLists(plugin.getConfig().getConfigurationSection("lists"));
-
-        plugin.getLogger().info("配置加载完成");
+        
+        plugin.getLogger().info("配置文件值已加载。");
     }
 
+    // reload 现在只做一件事：重新加载值
     public static void reloadConfig() {
-        plugin.reloadConfig();
-        loadConfig();
+        loadConfigValues();
     }
-
-    public static int getPageSize() {
-        return pageSize;
-    }
-
-    public static int getUpdateInterval() {
-        return updateInterval;
-    }
-
-    public static Pattern getUIReplacePattern() {
-        return UIReplacePattern;
-    }
-
-    public static Pattern getListNamePattern() {
-        return listNamePattern;
-    }
-
-    public static DateTimeFormatter getTimeFormatter() {
-        return timeFormatter;
-    }
-
-    public static boolean isPapiEnabled() {
-        return isPapiEnabled;
-    }
-
-    public static boolean isDebugOutput() {
-        return debugOutput;
-    }
-
-    public static List<String> getBlackList() {
-        return blackList;
-    }
-
-    public static Pattern getExcludedRegex() {
-        return excludedRegex;
-    }
-
-    public static double getUpdateOfflineChance() {
-        return updateOfflineChance;
-    }
-
-    public static boolean uuidFilterEnabled() {
-        return uuidFilter;
-    }
+    
+    // --- Getter 方法保持不变 ---
+    public static int getPageSize() { return pageSize; }
+    public static int getUpdateInterval() { return updateInterval; }
+    public static Pattern getUIReplacePattern() { return UIReplacePattern; }
+    public static Pattern getListNamePattern() { return listNamePattern; }
+    public static DateTimeFormatter getTimeFormatter() { return timeFormatter; }
+    public static boolean isDebugOutput() { return debugOutput; }
+    public static List<String> getBlackList() { return blackList; }
+    public static Pattern getExcludedRegex() { return excludedRegex; }
+    public static double getUpdateOfflineChance() { return updateOfflineChance; }
+    public static boolean uuidFilterEnabled() { return uuidFilter; }
 }

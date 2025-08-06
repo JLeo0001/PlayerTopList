@@ -61,10 +61,14 @@
             <id>sonatype</id>
             <url>https://oss.sonatype.org/content/groups/public/</url>
         </repository>
-        <!-- 添加 Vault 仓库 -->
         <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
+        </repository>
+        <!-- 添加 PlaceholderAPI 仓库 -->
+        <repository>
+            <id>placeholderapi</id>
+            <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
     </repositories>
 
@@ -86,7 +90,6 @@
             <artifactId>exp4j</artifactId>
             <version>0.4.8</version>
         </dependency>
-        <!-- 添加 Vault API 依赖 -->
         <dependency>
             <groupId>com.github.MilkBowl</groupId>
             <artifactId>VaultAPI</artifactId>

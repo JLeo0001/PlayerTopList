@@ -53,7 +53,7 @@ public class TopListLoader {
             // 多种列表分别注册
             if (isStatistic(type)) {
                 addStatisticListToManager(name, nameColor, type, hidden, reversed, expressionString, formatter, material, entity);
-            } else if (Config.isPapiEnabled() && isPlaceHolder(type)) {
+            } else if (PlayerTopList.isPapiEnabled() && isPlaceHolder(type)) { // <--- 这里是修改点
                 addPlaceHolderListToManager(name, nameColor, type, hidden, reversed, expressionString, formatter);
             } else if (type.equalsIgnoreCase("VAULT_BALANCE")) {
                 addVaultListToManager(name, nameColor, hidden, reversed, expressionString, formatter);
